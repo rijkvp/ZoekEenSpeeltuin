@@ -8,6 +8,7 @@
         <hr>
         <p>This is just a test page testing if php & sql works. If it doesn't it should display some error message.</p>
         <br>
+        <a href="map_testing.php">Map Testing</a>
         <br>
         <h1>PHP TEST</h1>
         <?php 
