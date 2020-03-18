@@ -71,6 +71,14 @@
         <br>
         <input type="checkbox" name="glijbaan">
         <label for="glijbaan">Glijbaan</label>
+        <br>
+        <b>Leeftijd:</b>
+        <br>
+        <select id="leertijdscategorie">
+            <option value="1-5">1-3 jaar</option>
+            <option value="3-5">3-5 jaar</option>
+            <option value="5-8">5-8 jaar</option>
+        </select>
     </div>
     <div id="mapid"></div>
     <script>
