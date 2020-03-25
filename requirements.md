@@ -14,7 +14,6 @@
 - [ ] Really simple header bar at the top
 - [ ] Link to login page at the bottom
 
-
 ## Pages
 
 - [ ] Home/main page with the map
@@ -35,6 +34,7 @@
 - [ ] Overall rating slider
 
 ## Adding playgrounds
+
 - [ ] No account needed -> Added by community
 - [ ] Selects different parts with ammount
 - [ ] Explanation per category (add a simple [i] icon)
@@ -46,5 +46,4 @@
 - [ ] No account needed
 - [ ] Gives a rating
 - [ ] Is the information right?
-- [ ] Moderator is leading 
-
+- [ ] Moderator is leading
