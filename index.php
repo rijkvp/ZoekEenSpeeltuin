@@ -54,6 +54,7 @@
   </head>
   <body>
     <h1>Speeltuinen website prototype versie 0.0.1</h1>
+    <a href="add_playground.php">Voeg een nieuwe speeltuin toe</a>
     <div id="filters">
         <h2>Filters</h2>
         <b>Waardering</b>
@@ -82,10 +83,11 @@
     </div>
     <div id="mapid"></div>
     <?php
-    include 'includes/dbh.inc.php';
-    echo "Test";
+        include 'includes/playgrounds.inc.php';
     ?>
     <script>
+        var current_lat;
+        var current_lng;
         var map = L.map('mapid').setView([52.43, 5.42], 8);
         
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -95,8 +97,13 @@
 
         function onMapClick(e) {
             popup.setLatLng(e.latlng)
-                .setContent("You clicked the map at " + e.latlng.toString())
+                .setContent(e.latlng.lat.toFixed(3) + " " + e.latlng.lng.toFixed(3) + "<button onClick='addPlayground(" + e.latlng.lat + ", " + e.latlng.lng + ")'>Voeg speeltuin toe </button>")
                 .openOn(map);
+        }
+
+        function addPlayground(lat, lng) {
+            console.log("Add playground " + lat + " " + lng);
+            window.location.replace("add_playground.php?lat="+lat+"?lng="+lng);
         }
 
         map.on('click', onMapClick);
