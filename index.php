@@ -3,99 +3,74 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <title>Using MySQL and PHP with Google Maps</title>
-    <link rel="stylesheet" href="leaflet/leaflet.css" />
+    <title>Speeltuinen Website</title>
+    <!-- Leaflet -->
+    <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
     <script src="leaflet/leaflet.js"></script>
-    <style>
-        * {
-            font-family: sans-serif;
-        }
-
-        #mapid { height: 800px; width: 800px; }
-
-        .leaflet-popup-content-wrapper {
-            border-radius: 2px;
-        }
-
-        .leaflet-popup-content-wrapper .leaflet-popup-content {
-        }
-
-        .leaflet-popup-tip-container {
-        }
-
-        .leaflet-popup-close-button {
-            
-        }
-
-        .popup {
-            width: 300px;
-            min-height: 60px;
-        }
-        .popup img {
-            float: left;
-        }
-
-        .popup b {
-            font-size: 1.2rem;
-        }
-
-        .popup b,
-        .popup p{
-            margin: 0px;
-            margin-left: 70px;
-            display: block;
-        }
-
-        .rating {
-            font-size: 1.2rem;
-            color: #c9ba10;
-        }
-    </style>
+    <!-- Own CSS Stylesheet -->
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
   </head>
   <body>
-    <h1>Speeltuinen website prototype versie 0.0.1</h1>
-    <a href="add_playground.php">Voeg een nieuwe speeltuin toe</a>
-    <div id="filters">
-        <h2>Filters</h2>
-        <b>Waardering</b>
-        <br>
-        <input type="range" step="0.1" min="0" max="5" value="4" class="slider" id="ratingSlider">
-        <span id="ratingValue">5</span>
-        <br>
-        <b>Onderdelen:</b>
-        <br>
-        <input type="checkbox" name="schommel">
-        <label for="schommel">Schommel</label>
-        <br>
-        <input type="checkbox" name="wipwap">
-        <label for="wipwap">Wip-wap</label>
-        <br>
-        <input type="checkbox" name="glijbaan">
-        <label for="glijbaan">Glijbaan</label>
-        <br>
-        <b>Leeftijd:</b>
-        <br>
-        <select id="leertijdscategorie">
-            <option value="1-5">1-3 jaar</option>
-            <option value="3-5">3-5 jaar</option>
-            <option value="5-8">5-8 jaar</option>
-        </select>
-    </div>
-    <div id="mapid"></div>
+    <header>
+    <nav>
+        <ul>
+            <li class="active" id="logo"><a href="index.php">Speeltuinen</a></li>
+            <li class="active"><a href="index.php">Home</a></li>
+            <li><a href="add_playground.php">Toevoegen</a></li>
+        </ul>
+        </nav>
+    </header>
+    <section id="main">
+        <div id="filters">
+            <h2>Filters</h2>
+            <b>Waardering</b>
+            <br>
+            <input type="range" step="0.1" min="0" max="5" value="4" class="slider" id="ratingSlider">
+            <span id="ratingValue">5</span>
+            <br>
+            <b>Onderdelen:</b>
+            <br>
+            <input type="checkbox" name="schommel">
+            <label for="schommel">Schommel</label>
+            <br>
+            <input type="checkbox" name="wipwap">
+            <label for="wipwap">Wip-wap</label>
+            <br>
+            <input type="checkbox" name="glijbaan">
+            <label for="glijbaan">Glijbaan</label>
+            <br>
+            <b>Leeftijd:</b>
+            <br>
+            <select id="leertijdscategorie">
+                <option value="1-5">1-3 jaar</option>
+                <option value="3-5">3-5 jaar</option>
+                <option value="5-8">5-8 jaar</option>
+            </select>
+        </div>
+        <div id="map">
+        </div>
+    </section>
+   
     <?php
         include 'includes/playgrounds.inc.php';
     ?>
     <script>
+        // Get all of the playgrounds from the database with a GET request
+        var http = new XMLHttpRequest();
+        http.open("GET", "includes/get_playgrounds.inc.php", true);
+        http.send();
+        http.onload = () => displayMarkers(http.responseText);
+
         var current_lat;
         var current_lng;
-        var map = L.map('mapid').setView([52.43, 5.42], 8);
+        var map = L.map('map').setView([52.43, 5.42], 8);
         
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
         var popup = L.popup();
 
-        function onMapClick(e) {
+        function openAddPlaygroundPopup(e) {
             popup.setLatLng(e.latlng)
                 .setContent(e.latlng.lat.toFixed(3) + " " + e.latlng.lng.toFixed(3) + "<button onClick='addPlayground(" + e.latlng.lat + ", " + e.latlng.lng + ")'>Voeg speeltuin toe </button>")
                 .openOn(map);
@@ -103,23 +78,24 @@
 
         function addPlayground(lat, lng) {
             console.log("Add playground " + lat + " " + lng);
-            window.location.replace("add_playground.php?lat="+lat+"?lng="+lng);
+            window.location.replace("add_playground.php?lat="+lat+"&lng="+lng);
         }
 
-        map.on('click', onMapClick);
+        function displayMarkers(data)
+        {
+            // Decode the JSON
+            var playgrounds = JSON.parse(data);
+            for (var i = 0; i < playgrounds.length; i++)
+            {
+                L.marker([playgrounds[i][2], playgrounds[i][3]]).addTo(map)
+                .bindPopup(playgrounds[i][1])
+                .openPopup();
+            }
+        }
 
-        L.marker([52.472011, 6.124878]).addTo(map)
-            .bindPopup('Hier is ook een leuke!')
-            .openPopup();
+        map.on('click', openAddPlaygroundPopup);
 
-            L.marker([53.211134, 6.547422]).addTo(map)
-            .bindPopup('Dit is de beste speeltuin!')
-            .openPopup();
-            
-            L.marker([51.960452, 5.927124]).addTo(map)
-            .bindPopup('Hier is een leuke speeltuin!')
-            .openPopup();
-        // specify popup options 
+        // Styled popup example
         var customOptions =
         {
             'height': '400',

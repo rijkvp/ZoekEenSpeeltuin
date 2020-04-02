@@ -12,10 +12,9 @@ if($conn->connect_error) {
 }
 
 $sql = "CREATE DATABASE IF NOT EXISTS playgrounds ";
-if ($conn->query($sql) === TRUE) {
-    echo "Database created successfully";
-} else {
-    echo "Error creating database: " . $conn->error;
+if (!$conn->query($sql)) {
+    http_response_code(500);
+    exit();
 }
 
 $conn -> select_db("playgrounds");
@@ -27,10 +26,7 @@ $sql = "CREATE TABLE IF NOT EXISTS playgrounds (
     lng FLOAT
 )";
 
-if ($conn->query($sql) === TRUE) {
-    echo "Tabel voor speeltuinen succesvol aangemaakt.";
-} else {
-    die("Error creating table: " . $conn->error);
+if (!$conn->query($sql)) {
+    http_response_code(500);
+    exit();
 }
-
-//$conn->close();

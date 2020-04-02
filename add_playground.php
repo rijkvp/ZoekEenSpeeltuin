@@ -23,8 +23,11 @@
         <label for="lat">Breedtegraad:</label>
         <br>
         <?php
-            $lat = (float) $_GET["lat"];
-            
+            if (isset($_GET["lat"]))
+                $lat = (float) $_GET["lat"];
+            else
+                $lat = 0.0;
+
             echo "<input type='number' step='any' id='lat' name='lat' value=";
             echo $lat;
             echo ">";
@@ -33,7 +36,11 @@
         <label for="lng">Lengtegraad:</label>
         <br>
         <?php
-            $lng = (float) $_GET["lng"];
+            if (isset($_GET["lng"]))
+                $lng = (float) $_GET["lng"];
+            else
+                $lng = 0.0;
+                
             echo "<input type='number' step='any' id='lng' name='lng' value=";
             echo $lng;
             echo ">";

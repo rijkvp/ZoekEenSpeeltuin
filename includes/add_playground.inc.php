@@ -25,6 +25,7 @@ if (isset($_POST['name']) || isset($_POST['lat']) || isset($_POST['lng']))
         mysqli_stmt_close($stmt);
         header("Location: ../add_playground.php?error=false");
     }
+    $conn->close();
 }
 else
 {

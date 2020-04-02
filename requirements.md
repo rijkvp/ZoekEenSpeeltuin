@@ -8,10 +8,10 @@
 
 ## Layout
 
-- [ ] Like geochacing map website
-- [ ] 1/3 filters on the left
-- [ ] 2/3 map on the right
-- [ ] Really simple header bar at the top
+- [x] Like geochacing map website
+- [x] 1/3 filters on the left
+- [x] 2/3 map on the right
+- [x] Really simple header bar at the top
 - [ ] Link to login page at the bottom
 
 ## Pages

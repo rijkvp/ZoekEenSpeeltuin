@@ -1,19 +1,16 @@
-@import url('https://fonts.googleapis.com/css?family=Fjalla+One|Open+Sans:300,400,600,700,800&display=swap');
-
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800&display=swap');
 * {
     margin: 0px;
     padding: 0px;
     font-family: 'Open Sans', sans-serif;
 }
 
-body {
-    margin: 5% 20%;
-}
-
-h1, h2, h3, h4, h5
-{
-    font-weight: 400;
-    font-family: 'Fjalla One';
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-weight: bold;
     text-transform: uppercase;
 }
 
@@ -21,7 +18,109 @@ h1 {
     font-size: 3rem;
 }
 
-hr {
-    width: 80%;
-    border: 1px solid rgb(204, 204, 204);
+h2 {
+    font-size: 1.6rem;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100vh;
+}
+
+header {
+    height: 50px;
+}
+
+#main {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-height: calc(100vh - 50px);
+}
+
+#filters {
+    width: 200px;
+    padding: 10px 20px;
+}
+
+nav,
+nav ul,
+nav li {
+    height: 100%;
+}
+
+nav ul {
+    list-style-type: none;
+    background-color: #1c8d55;
+    display: flex;
+    flex-direction: row;
+}
+
+nav li {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 20px;
+}
+
+nav li a {
+    color: #FFF;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-decoration: none;
+    text-align: center;
+}
+
+nav li.active {
+    background-color: rgb(2, 112, 124);
+}
+
+nav li:hover:not(.active) {
+    background-color: rgb(59, 167, 104);
+    color: white;
+}
+
+#logo {
+    background-color: #1C8D55;
+}
+
+#logo a {
+    font-size: 1.6rem;
+    text-transform: uppercase;
+}
+
+#map {
+    flex: 1;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 2px;
+}
+
+.popup {
+    width: 300px;
+    min-height: 60px;
+}
+
+.popup img {
+    float: left;
+}
+
+.popup b {
+    font-size: 1.2rem;
+}
+
+.popup b,
+.popup p {
+    margin: 0px;
+    margin-left: 70px;
+    display: block;
+}
+
+.rating {
+    font-size: 1.2rem;
+    color: #c9ba10;
 }
