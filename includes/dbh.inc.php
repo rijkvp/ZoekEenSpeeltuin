@@ -19,6 +19,26 @@ if (!$conn->query($sql)) {
 
 $conn -> select_db("playgrounds");
 
+$sql = "CREATE TABLE IF NOT EXISTS parts_map (
+    part_id int(11) AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    item int(11),
+)";
+
+if (!$conn->query($sql)) {
+    http_response_code(500);
+    exit();
+}
+
+$sql = "CREATE TABLE IF NOT EXISTS parts (
+    part_id int(11) AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    name VARCHAR(30),
+)";
+
+if (!$conn->query($sql)) {
+    http_response_code(500);
+    exit();
+}
+
 $sql = "CREATE TABLE IF NOT EXISTS playgrounds (
     id int(11) AUTO_INCREMENT PRIMARY KEY NOT NULL,
     name VARCHAR(30),
