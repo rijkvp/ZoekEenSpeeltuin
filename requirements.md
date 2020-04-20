@@ -16,7 +16,7 @@
 
 ## Pages
 
-- [ ] Home/main page with the map
+- [x] Home/main page with the map
 - [ ] Login page
 - [ ] New playground page
 - [ ] ~~(Signup/Add moderator)~~
@@ -27,10 +27,10 @@
 
 ## Filters
 
-- [ ] Selectable parts
 - [ ] Minimal amount of parts slider
-- [ ] How challenging is the playgrond? -> for different ages
-- [ ] Challenge range slider (1-5 stars)
+- [ ] Selectable parts
+    How challenging is the playgrond? -> for different ages
+- [ ] Age double range slider
 - [ ] Overall rating slider
 
 ## Adding playgrounds

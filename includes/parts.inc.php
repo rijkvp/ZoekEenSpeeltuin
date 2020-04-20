@@ -2,7 +2,7 @@
 
 include "dbh.inc.php";
 
-$query = "SELECT * FROM playgrounds";
+$query = "SELECT * FROM parts";
 $result = $conn->query($query);     
 if (!$result) {
   printf("Query failed: %s\n", $mysqli->error);
@@ -10,10 +10,8 @@ if (!$result) {
 }      
 
 while($row = $result->fetch_row()) {
-  $playgrounds[]=$row;
+  $parts[]=$row;
 }
-
-
 
 $result->close();
 
