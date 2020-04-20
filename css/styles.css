@@ -5,6 +5,15 @@
     font-family: 'Open Sans', sans-serif;
 }
 
+:root {
+    --first-color: #1c8d55;
+    --first-color-hover: rgb(59, 167, 104);
+    --second-color: #0488c5;
+    --second-color-hover: #036999;
+    --second-color-active: #004869;
+    --active-color: rgb(2, 112, 124);
+}
+
 h1,
 h2,
 h3,
@@ -30,6 +39,40 @@ body {
     height: 100vh;
 }
 
+.btn {
+    cursor: pointer;
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    border: 2px solid rgb(209, 209, 209);
+    margin: 10px 0px;
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: var(--second-color);
+}
+
+.btn:hover {
+    background-color: var(--second-color-hover);
+}
+
+.btn:active {
+    background-color: var(--second-color-active);
+}
+
+.coordlabel {
+    font-weight: bold;
+    color: rgb(32, 32, 32);
+    font-size: 1.4rem;
+}
+
+.smallbtn {
+    margin: 0px 0px;
+    padding: 5px 10px;
+    font-size: 1.1rem;
+}
+
 header {
     height: 50px;
 }
@@ -39,6 +82,29 @@ header {
     flex-direction: row;
     align-items: stretch;
     min-height: calc(100vh - 50px);
+}
+
+#content {
+    max-width: 800px;
+    margin: auto;
+}
+
+@media only screen and (max-width: 1000px) {
+    #content {
+        max-width: 600px;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    #content {
+        max-width: 400px;
+    }
+}
+
+@media only screen and (max-width: 440px) {
+    #content {
+        max-width: 300px;
+    }
 }
 
 #filters {
@@ -54,7 +120,7 @@ nav li {
 
 nav ul {
     list-style-type: none;
-    background-color: #1c8d55;
+    background-color: var(--first-color);
     display: flex;
     flex-direction: row;
 }
@@ -75,11 +141,11 @@ nav li a {
 }
 
 nav li.active {
-    background-color: rgb(2, 112, 124);
+    background-color: var(--active-color);
 }
 
 nav li:hover:not(.active) {
-    background-color: rgb(59, 167, 104);
+    background-color: var(--first-color-hover);
     color: white;
 }
 
@@ -121,6 +187,6 @@ nav li:hover:not(.active) {
 }
 
 .rating {
-    font-size: 1.2rem;
-    color: #c9ba10;
+    font-size: 1.4rem;
+    color: #cab900;
 }

@@ -4,8 +4,8 @@
 <!DOCTYPE html >
 <html>
   <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
     <title>Speeltuinen Website</title>
     <!-- Leaflet -->
     <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
@@ -20,8 +20,8 @@
     <header>
     <nav>
         <ul>
-            <li class="active" id="logo"><a href="index.php">Speeltuinen</a></li>
-            <li class="active"><a href="index.php">Home</a></li>
+            <li id="logo"><a href="index.php">Speeltuinen</a></li>
+            <li class="active"><a href="index.php">Kaart</a></li>
             <li><a href="add_playground.php">Toevoegen</a></li>
         </ul>
         </nav>
@@ -166,8 +166,12 @@
         });
         map.addLayer(tileLayer);
         var layerGroup = L.layerGroup().addTo(map);
-
-        var popup = L.popup();
+        var customOptions =
+        {
+            'maxWidth': '240',
+            'width': '240',
+        }
+        var popup = L.popup(customOptions);
 
         var customIcon = L.icon({
             iconUrl: 'img/marker-icon.png',
@@ -178,8 +182,10 @@
         });
 
         function openAddPlaygroundPopup(e) {
+            
             popup.setLatLng(e.latlng)
-                .setContent(e.latlng.lat.toFixed(3) + " " + e.latlng.lng.toFixed(3) + "<button onClick='addPlayground(" + e.latlng.lat + ", " + e.latlng.lng + ")'>Voeg speeltuin toe </button>")
+                .setContent('<b class="coordlabel">' + e.latlng.lat.toFixed(3) + ", " + e.latlng.lng.toFixed(3)
+                 + "</b><button class='btn smallbtn' onClick='addPlayground(" + e.latlng.lat + ", " + e.latlng.lng + ")'>Speeltuin toevoegen</button>")
                 .openOn(map);
         }
 
