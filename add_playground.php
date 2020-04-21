@@ -20,7 +20,16 @@
     <div id="content">
         <a class="btn" href="index.php">Terug</a>
         <h1>Speeltuin Toevoegen</h1>
-        <form action="includes/add_playground.inc.php" method="post">
+        <form action="includes/add_playground.inc.php" method="post" enctype="multipart/form-data">
+            <?php 
+                if (isset($_GET['error']))
+                {
+                    echo '<div class="errordiv">
+                            <h3>ERROR</h3>
+                            '.$_GET['error'].'
+                            </div>';
+                }
+            ?>
             <h2>Algemeen</h2>
             <table>
                 <tr>
@@ -49,6 +58,12 @@
                             $lng = 0.0;
                         echo "<input type='number' step='any' id='lng' name='lng' value=".$lng.">";
                     ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Foto</td>
+                    <td>
+                        <input type="file" name="pictureToUpload">
                     </td>
                 </tr>
             </table>
@@ -82,13 +97,20 @@
             jaar
             <br><br>
             <h2>Voorzieningen</h2>
-            <input type="checkbox" name="alwaysOpen" value="true">
+            <input type="checkbox" class="checkbox" name="alwaysOpen" value="true">
             <label for="alwaysOpen">Deze speeltuin is altijd open</label>
             <br>
-            <input type="checkbox" name="cateringAvailable" value="true">
-            <label for="cateringAvailable">Is is horeca aanwezig</label>
+            <input type="checkbox" class="checkbox" name="cateringAvailable" value="true">
+            <label for="cateringAvailable">Er is horeca aanwezig</label>
             <br><br>
-            <h2>Waardering</h2>
+            <h2>Beoordeling</h2>
+            <label for="nickname">Gebruikersnaam:</label>
+            <input type="text" name="nickname">
+            <br>
+            <label for="comment">Tekst (optioneel):</label>
+            <br>
+            <textarea name="comment" playgrounds="10" cols="30"></textarea>
+            <br>
             Zelf geef ik deze speeltuin het cijfer: <input type="number" name="rating" min="1" max="5" value="4">
             <br>
             <i>TIP: Denk bijvoorbeeld aan: staat van onderhoud, omgeving, diversiteit...</i>

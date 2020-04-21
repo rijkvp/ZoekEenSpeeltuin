@@ -4,8 +4,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Speeltuinen Website</title>
+    <!-- Leaflet -->
+    <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
+    <script src="leaflet/leaflet.js"></script>
     <!-- Own CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <!-- Own JS -->
+    <script src="js/util.js"></script>
+    <script src="js/selectedmarker.js"></script>
   </head>
   <body>
     <header>
@@ -35,21 +41,53 @@
                 exit();
             }
             $playground = $result -> fetch_row();
-            echo'<h1>'.$playground[1].'</h1>
-                <img src="https://picsum.photos/800/450">
+            if (empty($playground) || !isset($playground))
+            {
+                echo "Deze speeltuin bestaat niet (meer)!";
+                return;
+            }
+            $playgroundIp = $playground[8];
+            $lat = $playground[2];
+            $lng = $playground[3];
+            $date = DateTime::createFromFormat('Y-m-d', $playground[9]);
+
+            $sql = "SELECT path FROM pictures WHERE playground_id=".$playgroundId;
+            $result = $conn->query($sql); 
+            if (!$result) {
+                http_response_code(500);
+                exit();
+            }
+            $picture_path = ($result -> fetch_row())[0];
+            echo'
+                <p class="date">'.date_format($date,"d-m-Y").'</p>
+                <h1>'.$playground[1].'</h1>';
+            if (!empty($picture_path) && isset($picture_path))
+            {
+                echo '<img class="playgroundImage" src='.$picture_path.'><hr>';
+            }
+            echo'
+                <h2>Kaart</h2>
+                <div id="smallmap"></div>
+                <hr>
                 <h2>Algemeen</h2>
                 <table>
-                <tr><td>Locatie</td><td>'.$playground[2].', '.$playground[3].'</td></tr>
+                <tr><td>Locatie</td><td>'.$lat.', '.$lng.'</td></tr>
                 <tr><td>Leeftijd/Uitdaging</td><td>'.$playground[4].' t/m '.$playground[5].' jaar</td></tr>
-                </table>
-                ';
-            if ($playground[6] == 1)
-                echo("<p>Is altijd open</p>");
-            else
-                echo("<p>Is NIET altijd open</p>");
-
-            if ($playground[7] == 1)
-                echo("<p>Horeca aanwezig</p>");
+                <tr>
+                    <td>Altijd open</td>';
+                if ($playground[6] == 1)
+                    echo("<td>Ja</td>");
+                else
+                    echo("<td><strong>Nee</strong></td>");
+                echo '</tr>
+                      <tr>
+                        <td>Horeca aanwezig</td>';
+                        if ($playground[7] == 1)
+                            echo("<td><strong>Ja</strong></td>");
+                        else 
+                            echo("<td>Nee</td>");
+                echo'</tr></table><hr>';
+                      
 
             echo'<h2>Onderdelen</h2>';
             $sql = "SELECT name FROM parts";
@@ -69,67 +107,112 @@
                 http_response_code(500);
                 exit();
             }
-            echo '<table>';
+            echo '<table>
+                    <tr><th>Onderdeel</th><th>Aantal</th></tr>';
             while ($playground = $result -> fetch_row()) {
-                echo '<tr>
-                    <td>'.$playground[1].'</td> 
-                    <td>'.$parts[$playground[0] - 1].'</td>
-                </tr>';
+                echo '  <tr>
+                            <td>'.$parts[$playground[0] - 1].'</td>
+                            <td>'.$playground[1].'</td> 
+                        </tr>';
             }
-            echo '</table>';
-            echo("<h2>Waardering</h2>");
-            $sql = "SELECT AVG(rating) FROM ratings WHERE playground_id=".$playgroundId;
+            echo '  </table><hr>
+                    <h2>Reviews</h2>';
+            $sql = "SELECT AVG(rating) FROM reviews WHERE playground_id=".$playgroundId;
             $result = $conn->query($sql); 
             if (!$result) {
-                die("ERROR ".$conn -> error);
-                //http_response_code(500);
-                //exit();
+                http_response_code(500);
+                exit();
             }
             $avgRating = ($result -> fetch_row())[0];
-            $sql = "SELECT COUNT(rating) FROM ratings WHERE playground_id=".$playgroundId;
+            $avgRating = number_format((float)$avgRating, 1, '.', '');
+            $sql = "SELECT COUNT(rating) FROM reviews WHERE playground_id=".$playgroundId;
             $result = $conn->query($sql); 
             if (!$result) {
-                die("ERROR ".$conn -> error);
-                //http_response_code(500);
-                //exit();
+                http_response_code(500);
+                exit();
             }
             $ratingCount = ($result -> fetch_row())[0];
-            echo("Gemiddeld cijfer: ".$avgRating);
-            echo("<br>Aantal waarderingen: ".$ratingCount);
+            echo '
+                <div id="averageRating">
+                    <span class="ratinglabel">'.$avgRating.'</span>
+                    <span class="ratingstars">'.$avgRating.'</span>
+                    <span>('.$ratingCount.' reviews)</span>
+                </div>';
             
-            echo("<h2>Reviews</h2>");
-            $sql = "SELECT nickname, comment, ip FROM reviews WHERE playground_id=".$playgroundId;
+            $sql = "SELECT nickname, comment, ip, rating FROM reviews WHERE playground_id=".$playgroundId;
             $result = $conn->query($sql); 
             if (!$result) {
-                die("ERROR ".$conn -> error);
-                //http_response_code(500);
-                //exit();
+                http_response_code(500);
+                exit();
             }
             while ($playground = $result -> fetch_row()) {
                 $reviews[] = $playground;
             }
             if (isset($reviews))
             {
+                echo "<br>";
+                $sql = "SELECT ip FROM playgrounds WHERE id='".$playgroundId."'";
+                $result = $conn->query($sql); 
+                if (!$result) {
+                    http_response_code(500);
+                    exit();
+                }
+                $uploadIp = ($result -> fetch_row())[0];
                 foreach($reviews as $review)
                 {
-                    $sql = "SELECT rating FROM ratings WHERE playground_id=".$playgroundId." AND ip='".$review[2]."'";
+                    $sql = "SELECT COUNT(rating) FROM reviews WHERE ip='".$review[2]."'";
                     $result = $conn->query($sql); 
                     if (!$result) {
-                        die("ERROR ".$conn -> error);
-                        //http_response_code(500);
-                        //exit();
+                        http_response_code(500);
+                        exit();
+                    }
+                    $userReviewCount = ($result -> fetch_row())[0];
+
+                    $sql = "SELECT rating FROM reviews WHERE playground_id=".$playgroundId." AND ip='".$review[2]."'";
+                    $result = $conn->query($sql); 
+                    if (!$result) {
+                        http_response_code(500);
+                        exit();
                     }
                     $rating = ($result -> fetch_row())[0];
-                    echo($rating." STERREN<br>");
-                    echo("<b>".$review[0].":</b> ".$review[1]);
+                    if ($review[2] == $ip)
+                    {
+                        $label = "[ Jij ] ";
+                    }
+                    else if ($review[2] == $uploadIp)
+                    {
+                        $label = "[ Uploader ] ";
+                    }
+                    else
+                    {
+                        $label = "";
+                    }
+                    echo'<div class="review">
+                        <b class="reviewNickName">'.$label.$review[0].'</b>
+                        <p class="reviewCount">'.$userReviewCount.' reviews</p>
+                        <p class="ratingstars ratingsmall">'.$review[3].'</p>
+                        <p>'.$review[1].'</p>
+                    </div>';
                 }
+                echo "<script> makeAllStarLayouts(); setupMap(".$lat.", ".$lng.");</script>";
             }
             else
             {
                 echo "Nog geen reviews";
             }
-            echo '
-                <h2>Geef een review</h2>
+            $sql = "SELECT ip FROM reviews WHERE playground_id=".$playgroundId;
+            $result = $conn->query($sql); 
+            $alreadyReviewed = false;
+            while ($row = $result -> fetch_row()) {
+                if ($row[0] == $ip)
+                {
+                    $alreadyReviewed = true;
+                }
+            }
+            if ($ip != $playgroundIp && !$alreadyReviewed)
+            {
+                echo '
+                <h3>Geef een review</h3>
                 <form action="includes/add_review.inc.php?id='.$_GET['id'].'" method="post">
                     <label for="nickname">Gebruikersnaam:</label>
                     <input type="text" name="nickname">
@@ -142,9 +225,17 @@
                     <br>
                     TIP: Denk bijvoorbeeld aan: staat van onderhoud, omgeving, diversiteit
                     <br>
-                    <input type="submit" value="Verzonden">
+                    <input class="btn smallbtn" type="submit" value="Versturen">
                 </form>
-            ';
+                ';
+            }
+            else if ($alreadyReviewed) {
+                echo "Je hebt al gereviewd!";
+            }
+            else {
+                echo "Je kan geen review meer toevoegen omdat je deze speeltuin zelf hebt geregistreed!";
+            }
+            
         }
         else
         {

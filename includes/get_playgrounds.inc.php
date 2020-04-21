@@ -13,12 +13,12 @@ if (empty($_GET)) {
 else if (isset($_GET['minRating']) && isset($_GET['minParts']) && isset($_GET['minAge']) && isset($_GET['maxAge'])  
 && isset($_GET['alwaysOpen'])  && isset($_GET['cateringAvailable']))
 {
-    $minRating = $_GET['minRating'];
-    $minParts = $_GET['minParts'];
-    $minAge = $_GET['minAge'];
-    $maxAge = $_GET['maxAge'];
-    $alwaysOpen = $_GET['alwaysOpen'];
-    $cateringAvailable = $_GET['cateringAvailable'];
+    $minRating = (float)$_GET['minRating'];
+    $minParts = (int)$_GET['minParts'];
+    $minAge = (int)$_GET['minAge'];
+    $maxAge = (int)$_GET['maxAge'];
+    $alwaysOpen = $_GET['alwaysOpen'] == 'true';
+    $cateringAvailable = $_GET['cateringAvailable'] == 'true';
 }
 else
 {
@@ -66,7 +66,7 @@ for ($x = $length-1; $x >= 0; $x--)
     $partsCount = ($result -> fetch_row())[0];  
 
     // GET THE AVERAGE RATING
-    $sql = "SELECT AVG(rating) FROM ratings WHERE playground_id=".$playgroundId;
+    $sql = "SELECT AVG(rating) FROM reviews WHERE playground_id=".$playgroundId;
     $result = $conn->query($sql); 
     if (!$result) {
         http_response_code(500);
@@ -81,6 +81,7 @@ for ($x = $length-1; $x >= 0; $x--)
         exit();
     }
     $playgroundAlwaysOpen = ($result -> fetch_row())[0] == 1;
+    
     $sql = "SELECT catering_available FROM playgrounds WHERE id=".$playgroundId;
     $result = $conn->query($sql); 
     if (!$result) {
@@ -92,16 +93,21 @@ for ($x = $length-1; $x >= 0; $x--)
     if (!($partsCount >= $minParts && $avgRating >= $minRating))
     {
         unset($playgrounds[$x]);
+        continue;
     }
-    if (!($alwaysOpen == false || $alwaysOpen == $playgroundAlwaysOpen))
+    if ($alwaysOpen && !$playgroundAlwaysOpen)
     {
         unset($playgrounds[$x]);
+        continue;
     }
-    if (!($cateringAvailable == false || $cateringAvailable == $playgroundCateringAvailable))
+    if ($cateringAvailable && !$playgroundCateringAvailable)
     {
         unset($playgrounds[$x]);
+        continue;
     }
 }
+$playgrounds = array_values($playgrounds);  // Make sure its an indexed array somtimes it becomes an associative array. 
+                                            // This ensures its an indexed array.
 
 $length = count($playgrounds);
 for ($x = 0; $x < $length; $x++)
@@ -121,7 +127,7 @@ for ($x = 0; $x < $length; $x++)
     }
 
     // GET THE AVERAGE RATING
-    $sql = "SELECT AVG(rating) FROM ratings WHERE playground_id=".$playgroundId;
+    $sql = "SELECT AVG(rating) FROM reviews WHERE playground_id=".$playgroundId;
     $result = $conn->query($sql); 
     if (!$result) {
         http_response_code(500);
@@ -130,7 +136,7 @@ for ($x = 0; $x < $length; $x++)
     $avgRating = ($result -> fetch_row())[0];
 
     // GET THE RATING COUNT
-    $sql = "SELECT COUNT(rating) FROM ratings WHERE playground_id=".$playgroundId;
+    $sql = "SELECT COUNT(rating) FROM reviews WHERE playground_id=".$playgroundId;
     $result = $conn->query($sql); 
     if (!$result) {
         http_response_code(500);
@@ -145,6 +151,7 @@ for ($x = 0; $x < $length; $x++)
 
 $conn->close();
 $result->close();
+
 
 header('Content-Type: application/json');
 echo json_encode($playgrounds);

@@ -1,60 +1,77 @@
 <?php
 
-if (isset($_GET['id']) && isset($_POST['nickname']) && isset($_POST['comment']) && isset($_POST['rating']))
+if ($_SERVER["REQUEST_METHOD"] != "POST") {
+    http_response_code(400);
+    exit();
+}
+
+if (!(isset($_GET['id']) && isset($_POST['nickname']) && isset($_POST['comment']) && isset($_POST['rating'])))
 {
-    require 'dbh.inc.php';
+    http_response_code(400);
+    exit();
+}
 
+require 'dbh.inc.php';
 
-    // TODO: Check ip - one review per user
-    $ip = getenv('HTTP_CLIENT_IP')?:
-    getenv('HTTP_X_FORWARDED_FOR')?:
-    getenv('HTTP_X_FORWARDED')?:
-    getenv('HTTP_FORWARDED_FOR')?:
-    getenv('HTTP_FORWARDED')?:
-    getenv('REMOTE_ADDR');
+$playgroundId = $_GET['id'];
+$nickname =     $_POST['nickname'];
+$comment =      $_POST['comment'];
+$rating =       (int)$_POST['rating'];
 
-    $playgroundId = $_GET['id'];
-    $nickname = $_POST['nickname'];
-    $comment = $_POST['comment'];
-    $rating = $_POST['rating'];
-        
-    $sql = "INSERT INTO ratings (playground_id, ip, rating) VALUES (?, ?, ?)";
-    $stmt = mysqli_stmt_init($conn);
-    
-    if (!mysqli_stmt_prepare($stmt, $sql))
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+if (empty($nickname) || strlen($nickname)<4 || strlen($nickname)>20) {
+    header("Location: ../playground.php?id=".$playgroundId."&error=nickname");
+    exit();
+} else {
+    $nickname = test_input($nickname);
+}
+
+if (empty($comment) || strlen($comment)<30 || strlen($comment)>140) {
+    header("Location: ../playground.php?id=".$playgroundId."&error=comment");
+    exit();
+} else {
+    $comment = test_input($comment);
+}
+
+if (empty($rating) || $rating < 1 || $rating > 5) {
+    http_response_code(400);
+    exit();
+} else {
+    $rating = test_input($rating);
+}
+
+$sql = "SELECT ip FROM reviews WHERE playground_id=".$playgroundId;
+$result = $conn->query($sql); 
+while ($row = $result -> fetch_row()) {
+    if ($row[0] == $ip)
     {
-        die ("FAIL: ".$stmt->error);
-        header("Location: ../add_playground.php?error=sqlerror");
+        http_response_code(403); // Forbidden! Only 1 review per IP to prevent spam
         exit();
     }
-    else
-    {
-        mysqli_stmt_bind_param($stmt, "sss", $playgroundId, $ip, $rating);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-    }
+}
 
-    $sql = "INSERT INTO reviews (playground_id, ip, nickname, comment) VALUES (?, ?, ?, ?)";
-    $stmt = mysqli_stmt_init($conn);
-    
-    if (!mysqli_stmt_prepare($stmt, $sql))
-    {
-        die ("FAIL: ".$stmt->error);
-        header("Location: ../add_playground.php?error=sqlerror");
-        exit();
-    }
-    else
-    {
-        mysqli_stmt_bind_param($stmt, "ssss", $playgroundId, $ip, $nickname, $comment);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-    }
+$sql = "INSERT INTO reviews (playground_id, ip, rating, nickname, comment, review_date) VALUES (?, ?, ?, ?, ?, ?)";
+$stmt = mysqli_stmt_init($conn);
 
-    header("Location: ../playground.php?id=".$playgroundId);
-    $conn->close();
+$date = date("Y-m-d");
+
+if (!mysqli_stmt_prepare($stmt, $sql))
+{
+    http_response_code(500);
+    exit();
 }
 else
 {
-    header("Location: ../add_playground.php?error=missingvalues");
-    exit();
+    mysqli_stmt_bind_param($stmt, "ssssss", $playgroundId, $ip, $rating, $nickname, $comment, $date);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
 }
+
+header("Location: ../playground.php?id=".$playgroundId);
+$conn->close();

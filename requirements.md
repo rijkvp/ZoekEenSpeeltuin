@@ -1,4 +1,17 @@
-# Meeting with Palsma - Requirements
+# Requirements
+
+## To-Do / Polishing
+
+- [ ] UI Fixes
+- [ ] Color Pallete
+- [ ] Fix age filter
+- [ ] Special parts filter
+- [ ] Image on playground popup
+- [ ] Marker icon
+- [ ] Feedback
+- [ ] Map on add playground
+- [ ] UX Check
+- [ ] CSS -> Mobile
 
 ## Accessibility
 
@@ -17,33 +30,31 @@
 ## Pages
 
 - [x] Home/main page with the map
-- [ ] Login page
-- [ ] New playground page
+- [x] New playground page
+- [ ] ~~Login page~~
 - [ ] ~~(Signup/Add moderator)~~
 
 ## Map
 
-- [ ] Loads & displays markers from the database
+- [x] Loads & displays markers from the database
 
 ## Filters
 
-- [ ] Minimal amount of parts slider
-- [ ] Selectable parts
-    How challenging is the playgrond? -> for different ages
-- [ ] Age double range slider
-- [ ] Overall rating slider
+- [x] Minimal amount of parts slider
+- [x] Age double range slider
+- [x] Overall rating slider
+- [ ] Selectable/Amount of parts
 
 ## Adding playgrounds
 
-- [ ] No account needed -> Added by community
-- [ ] Selects different parts with ammount
-- [ ] Explanation per category (add a simple [i] icon)
-- [ ] Challenging factor
-- [ ] Option to upload a picture -> store in seperate table -> php file upload
+- [x] No account needed -> Added by community
+- [x] Selects different parts with ammount
+- [x] Age/Challenging factor
+- [x] Option to upload a picture -> store in seperate table -> php file upload
 
 ## Comments
 
-- [ ] No account needed
-- [ ] Gives a rating
+- [x] No account needed
+- [x] Gives a rating
 - [ ] Is the information right?
 - [ ] Moderator is leading

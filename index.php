@@ -12,6 +12,8 @@
     <script src="leaflet/leaflet.js"></script>
     <!-- Own CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <!-- Own JS -->
+    <script src="js/util.js"></script>
     <!-- Library for custom sliders -->
     <link href="noUiSlider/nouislider.min.css" rel="stylesheet">
     <script src="noUiSlider/nouislider.min.js"></script>
@@ -29,39 +31,50 @@
     <section id="main">
         <div id="filters">
             <h2>Filters</h2>
-            <b>Waardering:</b>
-            <br>
-            <div id="ratingSlider"></div>
-            <span id="ratingSliderValue">1.0</span>
-            <br>
-            <b>Onderdelen:</b>
-            <br>
-            <div id="minPartsSlider"></div>
-            <span id="minPartsSliderValue">0</span>
-            <br>
-            <?php
-                 include 'includes/parts.inc.php';
-                 foreach ($parts as $part)
-                 {
-                     $inputname = "part".$part[0];
-                     echo('<label for="'.$inputname.'">Aantal onderdelen van "'.$part[1].'"</label>');
-                     echo('<input type="number" name="'.$inputname.'" min="0" max="10" value="0">');
-                     echo("<br>");
-                 }
-            ?>
-            <br>
-            <b>Leeftijd:</b>
-            <div id="ageSlider"></div>
-            <div id="ageSliderValue"></div>
-            
-            <br>
-            <b>Voorzieningen</b>
-            <br>
-            <label for="alwaysOpen">Altijd geopend</label>
-            <input type="checkbox" name="alwaysOpen" onclick="changeAlwaysOpen(this)">
-            <br>
-            <label for="cateringAvailable">Horeca aanwezig</label>
-            <input type="checkbox" name="cateringAvailable" onclick="changeCateringAvailable(this)">
+            <div class="filterdiv">
+                <h3>Beoordeling</h3>
+                <div id="ratingSlider"></div>
+                <span id="ratingSliderValue">1.0</span>
+            </div>
+            <div class="filterdiv">
+                <h3>Min. Onderdelen</h3>
+                <div id="minPartsSlider"></div>
+                <span id="minPartsSliderValue">0</span>
+            </div>
+            <div class="filterdiv">
+                <h3>Leeftijd / Uitdaging</h3>
+                <div id="ageSlider"></div>
+                <div id="ageSliderValue"></div>
+            </div>
+            <div class="filterdiv">
+                <h3>Voorzieningen</h3>
+                <input type="checkbox" class="checkbox" name="alwaysOpen" onclick="changeAlwaysOpen(this)">
+                <label for="alwaysOpen">Altijd geopend</label>
+                <br>
+                <input type="checkbox" class="checkbox" name="cateringAvailable" onclick="changeCateringAvailable(this)">
+                <label for="cateringAvailable">Horeca aanwezig</label>
+            </div>
+            <div class="filterdiv">
+                <h3>Onderdelen</h3>
+                <?php
+                    include 'includes/parts.inc.php';
+                    echo '<table>';
+                    foreach ($parts as $part)
+                    {
+                        $inputname = "part".$part[0];
+                        echo'<tr>
+                                <td>
+                                    <label for="'.$inputname.'">'.$part[1].'</label>
+                                </td>
+                                <td>
+                                    <input type="number" name="'.$inputname.'" min="0" max="10" value="0">
+                                </td>
+                            </tr>
+                            ';
+                    }
+                    echo '</table>';
+                ?>
+            </div>           
             <script>
                 function applyFilters()
                 {
@@ -135,8 +148,7 @@
                 });
             </script>
         </div>
-        <div id="map">
-        </div>
+        <div id="map"></div>
     </section>
     <script>
         function requestPlaygroundData()
@@ -175,10 +187,9 @@
 
         var customIcon = L.icon({
             iconUrl: 'img/marker-icon.png',
-
-            iconSize:     [32, 32], // size of the icon
-            iconAnchor:   [16, 16], // point of the icon which will correspond to marker's location
-            popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [32, 32],
+            iconAnchor:   [16, 16],
+            popupAnchor:  [0, 0]
         });
 
         function openAddPlaygroundPopup(e) {
@@ -198,7 +209,14 @@
         {
             // Decode the JSON
             layerGroup.clearLayers();
-            var playgrounds = JSON.parse(data);
+            try
+            {
+                var playgrounds = JSON.parse(data);
+            }
+            catch
+            {
+                return;
+            }
             for (var i = 0; i < playgrounds.length; i++)
             {
                 var customOptions =
@@ -210,7 +228,7 @@
                 var customPopup = L.popup(customOptions)
                 .setContent('<div class="popup"><img src="https://picsum.photos/60/60"><b>' + playgrounds[i][1] +
                  '</b><p>Onderdelen: ' + playgrounds[i][6] +'</p><p>Leeftijd: '
-                 + playgrounds[i][4] + " t/m " + playgrounds[i][5] +' jaar</p><p>'
+                 + playgrounds[i][4] + " t/m " + playgrounds[i][5] +' jaar</p><p class="ratingstars ratingsmall">'
                  + parseFloat(playgrounds[i][7]).toFixed(1) + makeStarLayout(parseFloat(playgrounds[i][7])) + ' ('
                  + playgrounds[i][8] 
                  + ' reviews) </p><p><a href="playground.php?id=' + playgrounds[i][0] + '">Meer informatie</a></p></div>');
@@ -220,23 +238,6 @@
                 .openPopup();
             }
         }
-
-        function makeStarLayout(value)
-        {
-            var filledStars = Math.round(value);
-            var emptyStars = 5 - filledStars
-            var string = "";
-            for(var i = 0; i < filledStars; i++)
-            {
-                string += "&#9733";
-            }
-            for(var i = 0; i < emptyStars; i++)
-            {
-                string += "&#9734";
-            }             
-            return '<span class="rating">' + string +"</span>";
-        }
-
         map.on('click', openAddPlaygroundPopup);        
     </script>
     </body>

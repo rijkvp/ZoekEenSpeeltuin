@@ -42,10 +42,13 @@ if (!$conn->query($sql)) {
     //exit();
 }
 
-$sql = "CREATE TABLE IF NOT EXISTS ratings (
+$sql = "CREATE TABLE IF NOT EXISTS reviews (
     playground_id int(11),
+    nickname varchar(16),
     ip varchar(16),
-    rating TINYINT UNSIGNED
+    rating TINYINT UNSIGNED,
+    comment TEXT,
+    review_date DATE
 )";
 
 if (!$conn->query($sql)) {
@@ -54,15 +57,13 @@ if (!$conn->query($sql)) {
     //exit();
 }
 
-$sql = "CREATE TABLE IF NOT EXISTS reviews (
+$sql = "CREATE TABLE IF NOT EXISTS pictures (
     playground_id int(11),
-    ip varchar(16),
-    nickname varchar(16),
-    comment TEXT
+    path TINYTEXT
 )";
 
 if (!$conn->query($sql)) {
-    die("ERROR1 ".$conn->error);
+    die("ERROR6 ".$conn->error);
     //http_response_code(500);
     //exit();
 }
@@ -75,7 +76,9 @@ $sql = "CREATE TABLE IF NOT EXISTS playgrounds (
     age_from int(3),
     age_to int(3),
     always_open BIT(1),
-    catering_available BIT(1)
+    catering_available BIT(1),
+    ip varchar(16),
+    upload_date DATE
 )";
 
 if (!$conn->query($sql)) {
@@ -85,7 +88,8 @@ if (!$conn->query($sql)) {
 }
 
 
-$defaultparts = array("Schommel", "Zandbak", "Wipwap", "Glijbaan", "Rekstok", "Klimrek", "Klimtoestel", "Trampoline", "Springkussen");
+$defaultparts = array("Schommel", "Zandbak", "Kabelbaan", "Waterpomp", "Parcours", "Wipwap", "Glijbaan", "Rekstok", "Klimrek", "Klimtoestel", "Trampoline", "Springkussen");
+sort($defaultparts);
 
 foreach($defaultparts as $part)
 {
@@ -117,3 +121,11 @@ foreach($defaultparts as $part)
         }
     }
 }
+
+$ip = getenv('HTTP_CLIENT_IP')?:
+    getenv('HTTP_X_FORWARDED_FOR')?:
+    getenv('HTTP_X_FORWARDED')?:
+    getenv('HTTP_FORWARDED_FOR')?:
+    getenv('HTTP_FORWARDED')?:
+    getenv('REMOTE_ADDR');
+

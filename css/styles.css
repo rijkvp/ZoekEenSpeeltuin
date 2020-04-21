@@ -12,6 +12,8 @@
     --second-color-hover: #036999;
     --second-color-active: #004869;
     --active-color: rgb(2, 112, 124);
+    --rating-fill-color: #e7b11b;
+    --rating-bg-color: #b1b1b1;
 }
 
 h1,
@@ -21,6 +23,12 @@ h4,
 h5 {
     font-weight: bold;
     text-transform: uppercase;
+}
+
+h3 {
+    font-size: 1.1rem;
+    padding: 6px 0px;
+    color: rgb(66, 66, 66);
 }
 
 h1 {
@@ -37,6 +45,48 @@ html {
 
 body {
     height: 100vh;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table,
+th,
+td {
+    border: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+    background-color: #eeeeee;
+}
+
+th {
+    background-color: rgb(209, 209, 209);
+}
+
+th,
+td {
+    padding: 8px;
+}
+
+hr {
+    margin: 24px 10%;
+    border: 1px solid #eee;
+}
+
+.review {
+    background-color: #eee;
+    padding: 20px 10px;
+}
+
+.reviewNickName {
+    font-size: 1.1rem;
+}
+
+.reviewCount {
+    font-size: 0.9rem;
+    color: rgb(87, 87, 87);
 }
 
 .btn {
@@ -89,8 +139,16 @@ header {
     margin: auto;
 }
 
+.playgroundImage {
+    max-width: 800px;
+    max-height: 600px;
+}
+
 @media only screen and (max-width: 1000px) {
     #content {
+        max-width: 600px;
+    }
+    .playgroundImage {
         max-width: 600px;
     }
 }
@@ -99,10 +157,16 @@ header {
     #content {
         max-width: 400px;
     }
+    .playgroundImage {
+        max-width: 400px;
+    }
 }
 
 @media only screen and (max-width: 440px) {
     #content {
+        max-width: 300px;
+    }
+    .playgroundImage {
         max-width: 300px;
     }
 }
@@ -186,7 +250,55 @@ nav li:hover:not(.active) {
     display: block;
 }
 
-.rating {
+.filledrating {
+    color: var(--rating-fill-color);
+}
+
+.emptyrating {
+    color: var(--rating-bg-color);
+}
+
+.ratinglabel {
+    font-size: 2rem;
+    color: var(--rating-fill-color);
+}
+
+.ratingstars {
+    font-size: 2rem;
+}
+
+.ratingsmall {
     font-size: 1.4rem;
-    color: #cab900;
+}
+
+.filterdiv {
+    padding: 14px 0px;
+}
+
+#smallmap {
+    height: 400px;
+}
+
+.date {
+    text-align: right;
+    letter-spacing: 2px;
+    color: #666;
+}
+
+.checkbox {
+    height: 20px;
+    width: 20px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    border: none;
+    outline: none;
+    transition-duration: 0.2s;
+    cursor: pointer;
+    background-color: rgb(197, 197, 197);
+}
+
+.checkbox:checked {
+    background-color: rgb(8, 85, 209);
 }
