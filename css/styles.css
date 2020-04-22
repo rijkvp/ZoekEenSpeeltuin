@@ -92,7 +92,7 @@ hr {
 .btn {
     cursor: pointer;
     display: inline-block;
-    color: white;
+    color: white !important;
     text-decoration: none;
     border: 2px solid rgb(209, 209, 209);
     margin: 10px 0px;
@@ -121,6 +121,12 @@ hr {
     margin: 0px 0px;
     padding: 5px 10px;
     font-size: 1.1rem;
+}
+
+.extrasmallbtn {
+    margin: 0px 0px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
 }
 
 header {
@@ -263,6 +269,11 @@ nav li:hover:not(.active) {
     color: var(--rating-fill-color);
 }
 
+.ratinglabelsmall {
+    font-size: 1.2rem;
+    color: var(--rating-fill-color);
+}
+
 .ratingstars {
     font-size: 2rem;
 }
@@ -301,4 +312,19 @@ nav li:hover:not(.active) {
 
 .checkbox:checked {
     background-color: rgb(8, 85, 209);
+}
+
+.playgroundIcon {
+    max-width: 70px;
+    max-height: 70px;
+}
+
+.headinglink {
+    color: black !important;
+    text-decoration: none;
+}
+
+.headinglink:hover {
+    color: black !important;
+    text-decoration: underline;
 }

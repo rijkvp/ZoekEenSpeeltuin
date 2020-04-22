@@ -88,7 +88,7 @@ if (!$conn->query($sql)) {
 }
 
 
-$defaultparts = array("Schommel", "Zandbak", "Kabelbaan", "Waterpomp", "Parcours", "Wipwap", "Glijbaan", "Rekstok", "Klimrek", "Klimtoestel", "Trampoline", "Springkussen");
+$defaultparts = array("Schommel", "Daaimolen", "Zandbak", "Kabelbaan", "Waterpomp", "Parcours", "Wipwap", "Glijbaan", "Rekstok", "Klimrek", "Klimtoestel", "Trampoline", "Springkussen");
 sort($defaultparts);
 
 foreach($defaultparts as $part)
@@ -129,3 +129,4 @@ $ip = getenv('HTTP_CLIENT_IP')?:
     getenv('HTTP_FORWARDED')?:
     getenv('REMOTE_ADDR');
 
+$ip = 666;

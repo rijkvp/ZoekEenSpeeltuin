@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <title>Speeltuinen Website</title>
     <!-- Leaflet -->
-    <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
-    <script src="leaflet/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
+    <script src="libs/leaflet/leaflet.js"></script>
     <!-- Own CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <!-- Own JS -->

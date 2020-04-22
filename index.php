@@ -8,15 +8,15 @@
     <meta charset="UTF-8">
     <title>Speeltuinen Website</title>
     <!-- Leaflet -->
-    <link rel="stylesheet" type="text/css" href="leaflet/leaflet.css" />
-    <script src="leaflet/leaflet.js"></script>
+    <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
+    <script src="libs/leaflet/leaflet.js"></script>
     <!-- Own CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <!-- Own JS -->
     <script src="js/util.js"></script>
     <!-- Library for custom sliders -->
-    <link href="noUiSlider/nouislider.min.css" rel="stylesheet">
-    <script src="noUiSlider/nouislider.min.js"></script>
+    <link href="libs/noUiSlider/nouislider.min.css" rel="stylesheet">
+    <script src="libs/noUiSlider/nouislider.min.js"></script>
   </head>
   <body>
     <header>
@@ -67,7 +67,7 @@
                                     <label for="'.$inputname.'">'.$part[1].'</label>
                                 </td>
                                 <td>
-                                    <input type="number" name="'.$inputname.'" min="0" max="10" value="0">
+                                    <input type="checkbox" class="checkbox" name="'.$inputname.'">
                                 </td>
                             </tr>
                             ';
@@ -195,7 +195,7 @@
         function openAddPlaygroundPopup(e) {
             
             popup.setLatLng(e.latlng)
-                .setContent('<b class="coordlabel">' + e.latlng.lat.toFixed(3) + ", " + e.latlng.lng.toFixed(3)
+                .setContent('<b class="coordlabel">' + e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4)
                  + "</b><button class='btn smallbtn' onClick='addPlayground(" + e.latlng.lat + ", " + e.latlng.lng + ")'>Speeltuin toevoegen</button>")
                 .openOn(map);
         }
@@ -225,17 +225,24 @@
                     'maxWidth': '800',
                     'width': '500',
                 }
+                var imageSrc;
+                if (playgrounds[i][9] != null)
+                {
+                    imageSrc = playgrounds[i][9];
+                    console.log("PATH IS " + playgrounds[i][9]);
+                } else {
+                    imageSrc = "";
+                }
                 var customPopup = L.popup(customOptions)
-                .setContent('<div class="popup"><img src="https://picsum.photos/60/60"><b>' + playgrounds[i][1] +
-                 '</b><p>Onderdelen: ' + playgrounds[i][6] +'</p><p>Leeftijd: '
-                 + playgrounds[i][4] + " t/m " + playgrounds[i][5] +' jaar</p><p class="ratingstars ratingsmall">'
-                 + parseFloat(playgrounds[i][7]).toFixed(1) + makeStarLayout(parseFloat(playgrounds[i][7])) + ' ('
+                .setContent('<div class="popup"><img class="playgroundIcon" src="' + imageSrc + '"><h3><a class="headinglink" href="playground.php?id=' + playgrounds[i][0] + '">' + playgrounds[i][1] +
+                 '</a></h3><p>Onderdelen: ' + playgrounds[i][6] +'</p><p>Leeftijd: '
+                 + playgrounds[i][4] + " t/m " + playgrounds[i][5] +' jaar</p><p><span class="ratinglabelsmall">'
+                 + parseFloat(playgrounds[i][7]).toFixed(1) + '</span> <span class="ratingstars ratingsmall">' + makeStarLayout(parseFloat(playgrounds[i][7])) + '</span> ('
                  + playgrounds[i][8] 
-                 + ' reviews) </p><p><a href="playground.php?id=' + playgrounds[i][0] + '">Meer informatie</a></p></div>');
+                 + ' reviews) </p><p><a class="btn extrasmallbtn" href="playground.php?id=' + playgrounds[i][0] + '">Meer Info</a></p></div>');
                 
                 L.marker([playgrounds[i][2], playgrounds[i][3]], {icon: customIcon}).addTo(layerGroup)
-                .bindPopup(customPopup)
-                .openPopup();
+                .bindPopup(customPopup);
             }
         }
         map.on('click', openAddPlaygroundPopup);        

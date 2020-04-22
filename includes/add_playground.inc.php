@@ -23,7 +23,7 @@ function test_input($data) {
     return $data;
 }
 
-if (empty($name) || strlen($name)<4 || strlen($name)>20) {
+if (empty($name) || strlen($name)<4 || strlen($name)>30) {
     header("Location: ../add_playground.php?error=name");
     exit();
 } else {

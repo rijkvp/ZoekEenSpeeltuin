@@ -143,10 +143,22 @@ for ($x = 0; $x < $length; $x++)
         exit();
     }
     $ratingCount = ($result -> fetch_row())[0];
-    
+
+    // GET THE PATH IF THERE IS
+    $sql = "SELECT path FROM pictures WHERE playground_id=".$playgroundId;
+    $result = $conn->query($sql); 
+    if (!$result) {
+        http_response_code(500);
+        exit();
+    }
+    $picturePath = ($result -> fetch_row())[0];
+    if (empty($picturePath) || !isset($picturePath))
+        $picturePath = NULL;
+
     array_push($playgrounds[$x], $partString);
     array_push($playgrounds[$x], $avgRating);
     array_push($playgrounds[$x], $ratingCount);
+    array_push($playgrounds[$x], $picturePath);
 }
 
 $conn->close();
