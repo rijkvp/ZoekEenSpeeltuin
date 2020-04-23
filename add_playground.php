@@ -61,7 +61,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Foto</td>
+                    <td>Foto (optioneel)</td>
                     <td>
                         <input type="file" name="pictureToUpload">
                     </td>
@@ -97,19 +97,23 @@
             jaar
             <br><br>
             <h2>Voorzieningen</h2>
-            <input type="checkbox" class="checkbox" name="alwaysOpen" value="true">
-            <label for="alwaysOpen">Deze speeltuin is altijd open</label>
+            <div class="checkbox">
+                <input type="checkbox"  name="alwaysOpen" value="true">
+                <label for="alwaysOpen">Deze speeltuin is altijd open</label>
+            </div>
             <br>
-            <input type="checkbox" class="checkbox" name="cateringAvailable" value="true">
-            <label for="cateringAvailable">Er is horeca aanwezig</label>
-            <br><br>
+            <div class="checkbox">
+                <input type="checkbox" name="cateringAvailable" value="true">
+                <label for="cateringAvailable">Er is horeca aanwezig</label>
+            </div>
+            <br>
             <h2>Beoordeling</h2>
             <label for="nickname">Gebruikersnaam:</label>
-            <input type="text" name="nickname">
+            <input type="text" name="nickname" minlength="4" maxlength="20">
             <br>
             <label for="comment">Tekst (optioneel):</label>
             <br>
-            <textarea name="comment" playgrounds="10" cols="30"></textarea>
+            <textarea name="comment" rows="5" cols="60" maxlength ="240"></textarea>
             <br>
             Zelf geef ik deze speeltuin het cijfer: <input type="number" name="rating" min="1" max="5" value="4">
             <br>

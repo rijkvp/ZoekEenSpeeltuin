@@ -9,6 +9,7 @@ if (empty($_GET)) {
     $maxAge = 18;
     $alwaysOpen = false;
     $cateringAvailable = false;
+    $requiredParts = array();
 }
 else if (isset($_GET['minRating']) && isset($_GET['minParts']) && isset($_GET['minAge']) && isset($_GET['maxAge'])  
 && isset($_GET['alwaysOpen'])  && isset($_GET['cateringAvailable']))
@@ -19,6 +20,12 @@ else if (isset($_GET['minRating']) && isset($_GET['minParts']) && isset($_GET['m
     $maxAge = (int)$_GET['maxAge'];
     $alwaysOpen = $_GET['alwaysOpen'] == 'true';
     $cateringAvailable = $_GET['cateringAvailable'] == 'true';
+    $requiredPartsStr = (string)$_GET['requiredParts'];
+    if (substr("$requiredPartsStr", -1) == "%")
+    {
+        $requiredPartsStr = substr($requiredPartsStr, 0, -1);
+    }
+    $requiredParts = explode("%", $requiredPartsStr);
 }
 else
 {
@@ -42,9 +49,8 @@ $sql = "SELECT name FROM parts";
 $result = $conn->query($sql); 
 
 if (!$result) {
-    die("ERROR ".$conn -> error);
-    //http_response_code(500);
-    //exit();
+    http_response_code(500);
+    exit();
 }
 while ($row = $result -> fetch_row()) {
     $parts[] = $row[0];
@@ -74,21 +80,17 @@ for ($x = $length-1; $x >= 0; $x--)
     }
     $avgRating = ($result -> fetch_row())[0];
    
-    $sql = "SELECT always_open FROM playgrounds WHERE id=".$playgroundId;
+    $sql = "SELECT always_open, catering_available, age_from, age_to FROM playgrounds WHERE id=".$playgroundId;
     $result = $conn->query($sql); 
     if (!$result) {
         http_response_code(500);
         exit();
     }
-    $playgroundAlwaysOpen = ($result -> fetch_row())[0] == 1;
-    
-    $sql = "SELECT catering_available FROM playgrounds WHERE id=".$playgroundId;
-    $result = $conn->query($sql); 
-    if (!$result) {
-        http_response_code(500);
-        exit();
-    }
-    $playgroundCateringAvailable = ($result -> fetch_row())[0] == 1;
+    $row = ($result -> fetch_row());
+    $playgroundAlwaysOpen = $row[0] == 1;
+    $playgroundCateringAvailable = $row[1] == 1;
+    $ageFrom = (int)$row[2];
+    $ageTo = (int)$row[3];
 
     if (!($partsCount >= $minParts && $avgRating >= $minRating))
     {
@@ -104,6 +106,27 @@ for ($x = $length-1; $x >= 0; $x--)
     {
         unset($playgrounds[$x]);
         continue;
+    }
+    if ($minAge > $ageTo || $maxAge < $ageFrom)
+    {
+        unset($playgrounds[$x]);
+        continue;
+    }
+    $sql = "SELECT part_id FROM parts_map WHERE playground_id=".$playgroundId;
+    $result = $conn->query($sql); 
+    if (!$result) {
+        http_response_code(500);
+        exit();
+    }
+    while ($row = $result -> fetch_row())
+    {
+        $partId = (int)$row[0];
+        die("ID IS: ".$partId);
+        if (!in_array($partId, $requiredParts))
+        {
+            unset($playgrounds[$x]);
+            break;
+        }
     }
 }
 $playgrounds = array_values($playgrounds);  // Make sure its an indexed array somtimes it becomes an associative array. 

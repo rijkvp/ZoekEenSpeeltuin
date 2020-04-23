@@ -10,75 +10,93 @@
     <!-- Leaflet -->
     <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
     <script src="libs/leaflet/leaflet.js"></script>
+    <!-- Library for custom sliders -->
+    <link href="libs/noUiSlider/nouislider.min.css" rel="stylesheet">
+    <script src="libs/noUiSlider/nouislider.min.js"></script>
     <!-- Own CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <!-- Own JS -->
     <script src="js/util.js"></script>
-    <!-- Library for custom sliders -->
-    <link href="libs/noUiSlider/nouislider.min.css" rel="stylesheet">
-    <script src="libs/noUiSlider/nouislider.min.js"></script>
   </head>
   <body>
     <header>
     <nav>
         <ul>
             <li id="logo"><a href="index.php">Speeltuinen</a></li>
+            <li id="logosmall"><a href="index.php">ST</a></li>
             <li class="active"><a href="index.php">Kaart</a></li>
             <li><a href="add_playground.php">Toevoegen</a></li>
         </ul>
         </nav>
     </header>
     <section id="main">
-        <div id="filters">
+        <div id="filterspanel">
+            <div id="filters">
             <h2>Filters</h2>
-            <div class="filterdiv">
-                <h3>Beoordeling</h3>
-                <div id="ratingSlider"></div>
-                <span id="ratingSliderValue">1.0</span>
+                <div class="filterdiv">
+                    <h3>Beoordeling</h3>
+                    <div id="ratingSlider"></div>
+                    <span id="ratingSliderValue">1.0</span>
+                </div>
+                <div class="filterdiv">
+                    <h3>Min. Onderdelen</h3>
+                    <div id="minPartsSlider"></div>
+                    <span id="minPartsSliderValue">0</span>
+                </div>
+                <div class="filterdiv">
+                    <h3>Leeftijd / Uitdaging</h3>
+                    <div id="ageSlider"></div>
+                    <div id="ageSliderValue"></div>
+                </div>
+                <div class="filterdiv">
+                    <h3>Voorzieningen</h3>
+                    <div class="checkbox">
+                        <input type="checkbox" name="alwaysOpen" onclick="changeAlwaysOpen(this)">
+                        <label for="alwaysOpen">Altijd geopend</label>
+                    </div>
+                    <br>
+                    <div class="checkbox">
+                        <input type="checkbox" name="cateringAvailable" onclick="changeCateringAvailable(this)">
+                        <label for="cateringAvailable">Horeca aanwezig</label>
+                    </div>
+                </div>
+                <div class="filterdiv">
+                    <h3>Onderdelen</h3>
+                    <?php
+                        include 'includes/parts.inc.php';
+                        echo '<table>';
+                        foreach ($parts as $part)
+                        {
+                            $inputname = "part".$part[0];
+                            echo'<tr>
+                                    <td>
+                                        <label for="'.$inputname.'">'.$part[1].'</label>
+                                    </td>
+                                    <td>
+                                        <div class="checkbox">
+                                            <input type="checkbox" onclick="changePartFilter(this)" name="'.$inputname.'">
+                                            <label></label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                ';
+                        }
+                        echo '</table>';
+                    ?>
+                </div>  
             </div>
-            <div class="filterdiv">
-                <h3>Min. Onderdelen</h3>
-                <div id="minPartsSlider"></div>
-                <span id="minPartsSliderValue">0</span>
-            </div>
-            <div class="filterdiv">
-                <h3>Leeftijd / Uitdaging</h3>
-                <div id="ageSlider"></div>
-                <div id="ageSliderValue"></div>
-            </div>
-            <div class="filterdiv">
-                <h3>Voorzieningen</h3>
-                <input type="checkbox" class="checkbox" name="alwaysOpen" onclick="changeAlwaysOpen(this)">
-                <label for="alwaysOpen">Altijd geopend</label>
-                <br>
-                <input type="checkbox" class="checkbox" name="cateringAvailable" onclick="changeCateringAvailable(this)">
-                <label for="cateringAvailable">Horeca aanwezig</label>
-            </div>
-            <div class="filterdiv">
-                <h3>Onderdelen</h3>
-                <?php
-                    include 'includes/parts.inc.php';
-                    echo '<table>';
-                    foreach ($parts as $part)
-                    {
-                        $inputname = "part".$part[0];
-                        echo'<tr>
-                                <td>
-                                    <label for="'.$inputname.'">'.$part[1].'</label>
-                                </td>
-                                <td>
-                                    <input type="checkbox" class="checkbox" name="'.$inputname.'">
-                                </td>
-                            </tr>
-                            ';
-                    }
-                    echo '</table>';
-                ?>
-            </div>           
             <script>
                 function applyFilters()
                 {
-                    requestFilteredPlaygroundData(minRatingFilter, minPartsFilter, minAgeFilter, maxAgeFilter, alwaysOpenFilter, cateringAvailableFilter);
+                    var requiredParts = "";
+                    for (var partId in partFilters) {
+                        if (partFilters[partId])
+                        {
+                            requiredParts += partId.substring(4) + "%";
+                        }
+                    }
+                    console.log(requiredParts);
+                    requestFilteredPlaygroundData(minRatingFilter, minPartsFilter, minAgeFilter, maxAgeFilter, alwaysOpenFilter, cateringAvailableFilter, requiredParts);
                 }
 
                 var minRatingFilter = 1;
@@ -87,6 +105,7 @@
                 var maxAgeFilter = 18;
                 var alwaysOpenFilter = false;
                 var cateringAvailableFilter = false;
+                var partFilters = {};
 
                 function changeAlwaysOpen(value) {
                     alwaysOpenFilter = value.checked;
@@ -94,6 +113,12 @@
                 }
                 function changeCateringAvailable(value) {
                     cateringAvailableFilter = value.checked;
+                    applyFilters();
+                }
+
+                function changePartFilter(value)
+                {
+                    partFilters[value.name] = value.checked;
                     applyFilters();
                 }
 
@@ -160,10 +185,10 @@
             http.onload = () => displayMarkers(http.responseText);
         }
 
-        function requestFilteredPlaygroundData(minRating, minParts, minAge, maxAge, alwaysOpen, cateringAvailable)
+        function requestFilteredPlaygroundData(minRating, minParts, minAge, maxAge, alwaysOpen, cateringAvailable, requiredParts)
         {
             var http = new XMLHttpRequest();
-            http.open("GET", "includes/get_playgrounds.inc.php?minRating="+minRating+"&minParts="+minParts+"&minAge="+minAge+"&maxAge="+maxAge + "&alwaysOpen="+alwaysOpen+"&cateringAvailable="+cateringAvailable, true);
+            http.open("GET", "includes/get_playgrounds.inc.php?minRating="+minRating+"&minParts="+minParts+"&minAge="+minAge+"&maxAge="+maxAge + "&alwaysOpen="+alwaysOpen+"&cateringAvailable="+cateringAvailable+"&requiredParts="+requiredParts, true);
             http.send();
             http.onload = () => displayMarkers(http.responseText);
         }
@@ -187,8 +212,11 @@
 
         var customIcon = L.icon({
             iconUrl: 'img/marker-icon.png',
+            shadowUrl: 'img/marker-icon-shadow.png',
             iconSize:     [32, 32],
             iconAnchor:   [16, 16],
+            shadowSize:   [40, 40],
+            shadowAnchor: [20, 20],
             popupAnchor:  [0, 0]
         });
 

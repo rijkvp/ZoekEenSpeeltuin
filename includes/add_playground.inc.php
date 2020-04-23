@@ -77,7 +77,7 @@ if (empty($nickname) || strlen($nickname)<4 || strlen($nickname)>20) {
     $nickname = test_input($nickname);
 }
 
-if (strlen($comment)>140) {
+if (strlen($comment)>240) {
     header("Location: ../add_playground.php?error=comment");
     exit();
 } else {

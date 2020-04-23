@@ -11,12 +11,12 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 
 ### Polishing
 
+- [x] Color Pallete
+- [x] Fix age filter
+- [x] Marker icon
 - [ ] UI Fixes
-- [ ] Color Pallete
-- [ ] Fix age filter
-- [ ] Special parts filter
-- [ ] Marker icon
 - [ ] UX Check
+- [ ] Special parts filter
 - [ ] Error messages
 
 ### Security
@@ -25,7 +25,7 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 
 ### Accessibility
 
-- [ ] Responsive CSS, works on mobile
+- [x] Responsive CSS, works on mobile
 
 ### Layout
 

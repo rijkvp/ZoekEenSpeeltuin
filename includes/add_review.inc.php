@@ -32,7 +32,7 @@ if (empty($nickname) || strlen($nickname)<4 || strlen($nickname)>20) {
     $nickname = test_input($nickname);
 }
 
-if (empty($comment) || strlen($comment)<30 || strlen($comment)>140) {
+if (empty($comment) || strlen($comment)<18 || strlen($comment)>240) {
     header("Location: ../playground.php?id=".$playgroundId."&error=comment");
     exit();
 } else {

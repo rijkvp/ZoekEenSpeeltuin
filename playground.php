@@ -215,11 +215,11 @@
                 <h3>Geef een review</h3>
                 <form action="includes/add_review.inc.php?id='.$_GET['id'].'" method="post">
                     <label for="nickname">Gebruikersnaam:</label>
-                    <input type="text" name="nickname">
+                    <input type="text" name="nickname" minlength="4" maxlength="20">
                     <br>
                     <label for="comment">Tekst:</label>
                     <br>
-                    <textarea name="comment" playgrounds="10" cols="30"></textarea>
+                    <textarea name="comment" rows="5" cols="60" minlength="18" maxlength ="240"></textarea>
                     <br>
                     Zelf geef ik deze speeltuin het cijfer: <input type="number" name="rating" min="1" max="5" value="4">
                     <br>
