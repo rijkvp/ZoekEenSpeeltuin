@@ -25,7 +25,29 @@
     </header>
     <div id="content">
     <a class="btn" href="index.php">Terug</a>
-
+    <?php 
+        if (isset($_GET['error']))
+        {
+            $type = $_GET['error'];
+            $msg = 'Onbekende error!';
+            switch($type)
+            {
+                case 'nickname':
+                    $msg = 'Voer een naam in van 4 tot 30 tekens!';
+                    break;
+                case 'nicknameused':
+                    $msg = 'Deze gebruikersnaam is al eerder door iemand anders gebruikt! Voer aub een andere gebruikersnaam in om verwarring te voorkomen.';
+                    break;
+                case 'comment':
+                    $msg = 'Voer een stukje tekst in van 18 tot 240 tekens!';
+                    break;
+            }
+            echo '<div class="errordiv">
+                    <h2>FOUT</h2>
+                    '.$msg.'
+                    </div>';
+        }
+    ?>
    <?php
         if (isset($_GET['id']))
         {
@@ -211,8 +233,8 @@
             }
             if ($ip != $playgroundIp && !$alreadyReviewed)
             {
-                echo '
-                <h3>Geef een review</h3>
+                echo '<hr>
+                <h2>Geef een review</h2>
                 <form action="includes/add_review.inc.php?id='.$_GET['id'].'" method="post">
                     <label for="nickname">Gebruikersnaam:</label>
                     <input type="text" name="nickname" minlength="4" maxlength="20">

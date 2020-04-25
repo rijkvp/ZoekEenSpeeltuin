@@ -43,6 +43,50 @@ if (empty($lng) || (float)$lng < 2 || (float)$lng > 8) {
     $lng = test_input($lng);
 }
 
+// TODO: Location check
+$sql = "SELECT lat, lng FROM playgrounds";
+$result = $conn->query($sql); 
+if (!$result) {
+    http_response_code(500);
+    exit();
+}
+
+class Location {
+    public $lat;
+    public $lng;
+
+    function __construct($lat, $lng) {
+        $this->lat = $lat;
+        $this->lng = $lng;
+    }
+
+    function get_distance($otherLat, $otherLng) {
+        // Pythagorean theorem
+        // A*A+B*B=C*C 
+        // C = SQRT(A*A + B*B)
+        return sqrt(($this->lat - $otherLat) * ($this->lat - $otherLat)
+         + ($this->lng - $otherLng) * ($this->lng - $otherLng));
+    }
+}
+
+$newLocation = new Location($lat, $lng);
+
+$locations = array();
+
+while ($row = $result -> fetch_row()) {
+    array_push($locations, new Location((float)$row[0], (float)$row[1]));
+}
+
+foreach($locations as $location)
+{
+    $dist = $location->get_distance($newLocation->lat, $newLocation->lng);
+    if ($dist < 0.001) // < ~100m ?!
+    {
+        header("Location: ../add_playground.php?error=location");
+        exit();
+    }
+}
+
 if (empty($ageFrom) || (int)$ageFrom < 0 || (int)$ageFrom > 18) {
     http_response_code(400);
     exit();
@@ -78,7 +122,7 @@ if (empty($nickname) || strlen($nickname)<4 || strlen($nickname)>20) {
 }
 
 if (strlen($comment)>240) {
-    header("Location: ../add_playground.php?error=comment");
+    http_response_code(400);
     exit();
 } else {
     $comment = test_input($comment);
@@ -103,7 +147,7 @@ if (!$result) {
 $playgroundId = (int)($result -> fetch_row())[0] + 1;
 
 // Upload the picture if set
-if(isset($_FILES["pictureToUpload"]) && !empty($_FILES["pictureToUpload"])) {
+if(isset($_FILES["pictureToUpload"]["name"]) && !empty($_FILES["pictureToUpload"]["name"])) {
     $target_dir = "../uploaded_pictures/";
     $target_file = $target_dir."playground".$playgroundId.".".pathinfo($_FILES["pictureToUpload"]["name"], PATHINFO_EXTENSION);
     $path_from_root = "uploaded_pictures/"."playground".$playgroundId.".".pathinfo($_FILES["pictureToUpload"]["name"], PATHINFO_EXTENSION);
@@ -114,7 +158,8 @@ if(isset($_FILES["pictureToUpload"]) && !empty($_FILES["pictureToUpload"])) {
     if($check !== false) {
         $uploadOk = 1;
     } else {
-        $uploadOk = 0;
+        header("Location: ../add_playground.php?error=picturefile");
+        exit();
     }
     if ($uploadOk == 1)
     {
@@ -123,17 +168,18 @@ if(isset($_FILES["pictureToUpload"]) && !empty($_FILES["pictureToUpload"])) {
             http_response_code(500);
             exit();
         }
-        // Check file size
-        if ($_FILES["pictureToUpload"]["size"] > 2 * 1024 * 1024) { // Should be less than 2 MB
-            header("Location: ../add_playground.php?error=picturesize");
-            exit();
-        }
         // Allow certain file formats
         if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
         && $imageFileType != "gif" ) {
             header("Location: ../add_playground.php?error=picturefiletype");
             exit();
         }
+        // Check file size
+        if ($_FILES["pictureToUpload"]["size"] > 2 * 1024 * 1024) { // Should be less than 2 MB
+            header("Location: ../add_playground.php?error=picturesize");
+            exit();
+        }
+        
 
         if (move_uploaded_file($_FILES["pictureToUpload"]["tmp_name"], $target_file)) {
             $sql = "INSERT INTO pictures (playground_id, path) VALUES (?, ?)";
@@ -176,8 +222,7 @@ $stmt = mysqli_stmt_init($conn);
 
 if (!mysqli_stmt_prepare($stmt, $sql))
 {
-    die ("FAIL: ".$stmt->error);
-    header("Location: ../add_playground.php?error=sqlerror");
+    http_response_code(500);
     exit();
 }
 else
@@ -194,8 +239,7 @@ foreach($partsToInsert as $partId => $amount)
     
     if (!mysqli_stmt_prepare($stmt, $sql))
     {
-        die ("FAIL: ".$stmt->error);
-        header("Location: ../add_playground.php?error=sqlerror");
+        http_response_code(500);
         exit();
     }
     else

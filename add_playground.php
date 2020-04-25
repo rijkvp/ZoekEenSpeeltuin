@@ -24,9 +24,41 @@
             <?php 
                 if (isset($_GET['error']))
                 {
+                    $type = $_GET['error'];
+                    $msg = 'Onbekende error!';
+                    switch($type)
+                    {
+                        case 'name':
+                            $msg = 'Voer een naam in van 4 tot 30 tekens!';
+                            break;
+                        case 'lat':
+                            $msg = 'Voer een geldige breedtegraad in!';
+                            break;
+                        case 'lng':
+                            $msg = 'Voer een geldige lengtegraad in!';
+                            break;
+                        case 'nickname':
+                            $msg = 'Voer een gebruikersnaam in van 4 tot 20 tekens!';
+                            break;
+                        case 'age':
+                            $msg = 'Voer een geldige leeftijd in!';
+                            break;
+                        case 'picturefile':
+                            $msg = 'Upload een bestand dat een foto is!';
+                            break;
+                        case 'picturefiletype':
+                            $msg = 'Upload een foto met het bestandstype .JPG, .PNG, .JPEG of .GIF!';
+                            break;
+                        case 'picturesize':
+                            $msg = 'Upload een foto met een bestandsgrootte van minder dan 2 MB!';
+                            break;
+                        case 'location':
+                            $msg = 'Deze locatie is niet geldig! Zorg dat er geen andere speeltuinen in de buurt zijn!';
+                            break;
+                    }
                     echo '<div class="errordiv">
-                            <h3>ERROR</h3>
-                            '.$_GET['error'].'
+                            <h2>FOUT</h2>
+                            '.$msg.'
                             </div>';
                 }
             ?>

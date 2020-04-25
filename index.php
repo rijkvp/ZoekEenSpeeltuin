@@ -95,7 +95,6 @@
                             requiredParts += partId.substring(4) + "%";
                         }
                     }
-                    console.log(requiredParts);
                     requestFilteredPlaygroundData(minRatingFilter, minPartsFilter, minAgeFilter, maxAgeFilter, alwaysOpenFilter, cateringAvailableFilter, requiredParts);
                 }
 
@@ -229,7 +228,6 @@
         }
 
         function addPlayground(lat, lng) {
-            console.log("Add playground " + lat + " " + lng);
             window.location.replace("add_playground.php?lat="+lat+"&lng="+lng);
         }
 
@@ -257,7 +255,6 @@
                 if (playgrounds[i][9] != null)
                 {
                     imageSrc = playgrounds[i][9];
-                    console.log("PATH IS " + playgrounds[i][9]);
                 } else {
                     imageSrc = "";
                 }

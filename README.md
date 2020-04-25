@@ -14,14 +14,13 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 - [x] Color Pallete
 - [x] Fix age filter
 - [x] Marker icon
-- [ ] UI Fixes
+- [x] UI Fixes
+- [x] Error messages
 - [ ] UX Check
-- [ ] Special parts filter
-- [ ] Error messages
 
 ### Security
 
-- [ ] No overlapping playgrounds in a specified radius.
+- [x] No overlapping playgrounds in a specified radius.
 
 ### Accessibility
 
@@ -48,7 +47,7 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 - [x] Minimal amount of parts slider
 - [x] Age double range slider
 - [x] Overall rating slider
-- [ ] Specify parts
+- [x] Specify parts
 
 ### Adding playgrounds
 
@@ -62,5 +61,4 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 
 - [x] No account needed
 - [x] Gives a rating
-- [ ] Editable
-- [ ] Is the information right? -> Uploader can edit / Admin can edit in phpMyAdmin
+- [ ] Editable -> Uploader can edit / Admin can edit in phpMyAdmin

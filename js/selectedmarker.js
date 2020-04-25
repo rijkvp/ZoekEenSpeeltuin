@@ -1,5 +1,4 @@
 function setupMap(lat, lng) {
-    console.log(lat + " " + lng);
     var customIcon = L.icon({
         iconUrl: 'img/marker-icon.png',
         iconSize: [32, 32],

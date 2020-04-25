@@ -25,7 +25,17 @@ else if (isset($_GET['minRating']) && isset($_GET['minParts']) && isset($_GET['m
     {
         $requiredPartsStr = substr($requiredPartsStr, 0, -1);
     }
-    $requiredParts = explode("%", $requiredPartsStr);
+    $requiredPartsStrArray = explode("%", $requiredPartsStr);
+    if (empty($requiredPartsStrArray[0]))
+    {
+        unset($requiredPartsStrArray);
+        $requiredPartsStrArray = array();
+    }    
+    $requiredParts = array();
+    foreach($requiredPartsStrArray as $part)
+    {
+        array_push($requiredParts, (int)$part);
+    }
 }
 else
 {
@@ -118,11 +128,15 @@ for ($x = $length-1; $x >= 0; $x--)
         http_response_code(500);
         exit();
     }
+    $partIds = array();
     while ($row = $result -> fetch_row())
     {
-        $partId = (int)$row[0];
-        die("ID IS: ".$partId);
-        if (!in_array($partId, $requiredParts))
+        array_push($partIds, (int)$row[0]); 
+    }
+
+    foreach($requiredParts as $requiredPart)
+    {
+        if (!in_array($requiredPart, $partIds))
         {
             unset($playgrounds[$x]);
             break;

@@ -32,6 +32,16 @@ if (empty($nickname) || strlen($nickname)<4 || strlen($nickname)>20) {
     $nickname = test_input($nickname);
 }
 
+$sql = "SELECT nickname, ip FROM reviews";
+$result = $conn->query($sql); 
+while ($row = $result -> fetch_row()) {
+    if ($row[0] == $nickname && $row[1] != $ip)
+    {
+        header("Location: ../playground.php?id=".$playgroundId."&error=nicknameused");
+        exit();
+    }
+}
+
 if (empty($comment) || strlen($comment)<18 || strlen($comment)>240) {
     header("Location: ../playground.php?id=".$playgroundId."&error=comment");
     exit();
