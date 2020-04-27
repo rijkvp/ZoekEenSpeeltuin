@@ -4,7 +4,7 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 
 ## Dependencies / Libraries
 
-*Can be found in the `lib` folder*
+*Can be found in the `libs` folder*
 
 - [Leaflet](https://leafletjs.com/)
 - [noUiSlider](https://refreshless.com/nouislider/)
