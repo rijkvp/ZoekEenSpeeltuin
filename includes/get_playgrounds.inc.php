@@ -160,9 +160,10 @@ for ($x = 0; $x < $length; $x++)
     }
     $partString = "";
     while ($row = $result -> fetch_row()) {
-        $partString .= $parts[$row[0] - 1]." (".$row[1]."), ";
+        $partString .= $row[1]."x ".$parts[$row[0] - 1].", ";
     }
-
+    $partString = substr($partString, 0, -2);
+    
     // GET THE AVERAGE RATING
     $sql = "SELECT AVG(rating) FROM reviews WHERE playground_id=".$playgroundId;
     $result = $conn->query($sql); 

@@ -12,7 +12,3 @@ if (!$result) {
 while($row = $result->fetch_row()) {
   $parts[]=$row;
 }
-
-$result->close();
-
-$conn->close();

@@ -168,7 +168,7 @@
                 ageSlider.noUiSlider.on('update', function(value) {
                     minAgeFilter = Math.round(value[0]);
                     maxAgeFilter = Math.round(value[1]);
-                    document.getElementById('ageSliderValue').innerHTML = minAgeFilter + " - " + maxAgeFilter;
+                    document.getElementById('ageSliderValue').innerHTML = minAgeFilter + " t/m " + maxAgeFilter + " jaar";
                 });
             </script>
         </div>
@@ -206,6 +206,7 @@
         {
             'maxWidth': '240',
             'width': '240',
+            'className' : 'popup'
         }
         var popup = L.popup(customOptions);
 
@@ -250,21 +251,34 @@
                     'height': '400',
                     'maxWidth': '800',
                     'width': '500',
+                    'className' : 'popup'
                 }
-                var imageSrc;
+                var imageSrc = "";
+                var hasImage = false;
                 if (playgrounds[i][9] != null)
                 {
+                    hasImage = true;
                     imageSrc = playgrounds[i][9];
-                } else {
-                    imageSrc = "";
                 }
-                var customPopup = L.popup(customOptions)
-                .setContent('<div class="popup"><img class="playgroundIcon" src="' + imageSrc + '"><h3><a class="headinglink" href="playground.php?id=' + playgrounds[i][0] + '">' + playgrounds[i][1] +
-                 '</a></h3><p>Onderdelen: ' + playgrounds[i][6] +'</p><p>Leeftijd: '
-                 + playgrounds[i][4] + " t/m " + playgrounds[i][5] +' jaar</p><p><span class="ratinglabelsmall">'
-                 + parseFloat(playgrounds[i][7]).toFixed(1) + '</span> <span class="ratingstars ratingsmall">' + makeStarLayout(parseFloat(playgrounds[i][7])) + '</span> ('
-                 + playgrounds[i][8] 
-                 + ' reviews) </p><p><a class="btn extrasmallbtn" href="playground.php?id=' + playgrounds[i][0] + '">Meer Info</a></p></div>');
+                if (hasImage)
+                {
+                    var customPopup = L.popup(customOptions)
+                    .setContent('<div class="popupdiv popupdivimg"><img class="playgroundIcon" src="' + imageSrc + '"><h3><a class="headinglink" href="playground.php?id=' + playgrounds[i][0] + '">' + playgrounds[i][1] +
+                    '</a></h3><p><strong>Onderdelen:</strong> ' + playgrounds[i][6] +'</p><p><strong>Leeftijd:</strong> '
+                    + playgrounds[i][4] + " t/m " + playgrounds[i][5] +' jaar</p><p><span class="ratinglabelsmall">'
+                    + parseFloat(playgrounds[i][7]).toFixed(1) + '</span> <span class="ratingstars ratingsmall">' + makeStarLayout(parseFloat(playgrounds[i][7])) + '</span> ('
+                    + playgrounds[i][8] 
+                    + ' reviews) </p><p><a class="btn extrasmallbtn" href="playground.php?id=' + playgrounds[i][0] + '">Meer Info</a></p></div>');
+                } else {
+                    var customPopup = L.popup(customOptions)
+                    .setContent('<div class="popupdiv"><h3><a class="headinglink" href="playground.php?id=' + playgrounds[i][0] + '">' + playgrounds[i][1] +
+                    '</a></h3><p><strong>Onderdelen:</strong> ' + playgrounds[i][6] +'</p><p><strong>Leeftijd:</strong> '
+                     + playgrounds[i][4] + " t/m " + playgrounds[i][5] +' jaar</p><p><span class="ratinglabelsmall">'
+                    + parseFloat(playgrounds[i][7]).toFixed(1) + '</span> <span class="ratingstars ratingsmall">' + makeStarLayout(parseFloat(playgrounds[i][7])) + '</span> ('
+                     + playgrounds[i][8] 
+                     + ' reviews) </p><p><a class="btn extrasmallbtn" href="playground.php?id=' + playgrounds[i][0] + '">Meer Info</a></p></div>');
+                }
+                
                 
                 L.marker([playgrounds[i][2], playgrounds[i][3]], {icon: customIcon}).addTo(layerGroup)
                 .bindPopup(customPopup);

@@ -4,6 +4,8 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 
 ## Dependencies / Libraries
 
+*Can be found in the `lib` folder*
+
 - [Leaflet](https://leafletjs.com/)
 - [noUiSlider](https://refreshless.com/nouislider/)
 
@@ -16,7 +18,6 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 - [x] Marker icon
 - [x] UI Fixes
 - [x] Error messages
-- [ ] UX Check
 
 ### Security
 
@@ -55,10 +56,10 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 - [x] Selects different parts with ammount
 - [x] Age/Challenging factor
 - [x] Option to upload a picture -> store in seperate table -> php file upload
-- [ ] Editable
+- [x] Editable
 
-### Comments
+### Reviews
 
 - [x] No account needed
 - [x] Gives a rating
-- [ ] Editable -> Uploader can edit / Admin can edit in phpMyAdmin
+- [x] Editable -> Uploader can edit / Admin can edit in phpMyAdmin

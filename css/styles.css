@@ -14,7 +14,7 @@
     --logo-bg-color: var(--first-color);
     --white: #FFFFFA;
     --rating-fill-color: #e7b11b;
-    --rating-bg-color: #b1b1b1;
+    --rating-bg-color: #979797;
     --font: 'Open Sans', sans-serif;
     --heading-font: 'Roboto Condensed', sans-serif;
 }
@@ -230,6 +230,51 @@ header {
 }
 
 
+/* MARKER POPUPS */
+
+.popup .leaflet-popup-content-wrapper {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+}
+
+.popup a.leaflet-popup-close-button {
+    color: rgb(100, 100, 100);
+    font-size: 2rem;
+    padding: 18px 20px 0 0;
+}
+
+.popup h3 {
+    padding: 0px;
+}
+
+.popup .leaflet-popup-tip,
+.popup .leaflet-popup-content-wrapper {
+    color: #234c5e;
+}
+
+.popupdiv {
+    width: 300px;
+    min-height: 60px;
+}
+
+.popupdiv img {
+    border-radius: 2px;
+    float: left;
+}
+
+.popupdiv b,
+.popupdiv p {
+    font-size: 0.9rem;
+    margin: 0px;
+    display: block;
+}
+
+.popupdivimg h3,
+.popupdivimg p {
+    margin-left: 76px;
+}
+
+
 /* SMALL ELEMENT STYLING */
 
 .review {
@@ -248,30 +293,6 @@ header {
 
 .noUi-connect {
     background-color: var(--second-color);
-}
-
-.leaflet-popup-content-wrapper {
-    border-radius: 2px;
-}
-
-.popup {
-    width: 300px;
-    min-height: 60px;
-}
-
-.popup img {
-    float: left;
-}
-
-.popup b {
-    font-size: 1.2rem;
-}
-
-.popup b,
-.popup p {
-    margin: 0px;
-    margin-left: 70px;
-    display: block;
 }
 
 .filledrating {
@@ -295,11 +316,13 @@ header {
 
 .ratinglabel {
     font-size: 2rem;
+    font-weight: bold;
     color: var(--rating-fill-color);
 }
 
 .ratinglabelsmall {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    font-weight: bold;
     color: var(--rating-fill-color);
 }
 
@@ -308,7 +331,7 @@ header {
 }
 
 .ratingsmall {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
 }
 
 .filterdiv {

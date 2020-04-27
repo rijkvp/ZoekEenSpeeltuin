@@ -56,32 +56,59 @@ if (empty($rating) || $rating < 1 || $rating > 5) {
     $rating = test_input($rating);
 }
 
-$sql = "SELECT ip FROM reviews WHERE playground_id=".$playgroundId;
-$result = $conn->query($sql); 
-while ($row = $result -> fetch_row()) {
-    if ($row[0] == $ip)
-    {
-        http_response_code(403); // Forbidden! Only 1 review per IP to prevent spam
-        exit();
-    }
+$updateReview = false;
+if ($_POST['action'] == "update")
+{
+    $updateReview = true;
 }
-
-$sql = "INSERT INTO reviews (playground_id, ip, rating, nickname, comment, review_date) VALUES (?, ?, ?, ?, ?, ?)";
-$stmt = mysqli_stmt_init($conn);
 
 $date = date("Y-m-d");
 
-if (!mysqli_stmt_prepare($stmt, $sql))
+if (!$updateReview)
 {
-    http_response_code(500);
-    exit();
+    $sql = "SELECT ip FROM reviews WHERE playground_id=".$playgroundId;
+    $result = $conn->query($sql); 
+    while ($row = $result -> fetch_row()) {
+        if ($row[0] == $ip)
+        {
+            http_response_code(403); // Forbidden! Only 1 review per IP to prevent spam
+            exit();
+        }
+    }
+
+    $sql = "INSERT INTO reviews (playground_id, ip, rating, nickname, comment, review_date) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_stmt_init($conn);
+    
+    
+    if (!mysqli_stmt_prepare($stmt, $sql))
+    {
+        http_response_code(500);
+        exit();
+    }
+    else
+    {
+        mysqli_stmt_bind_param($stmt, "ssssss", $playgroundId, $ip, $rating, $nickname, $comment, $date);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
 }
 else
 {
-    mysqli_stmt_bind_param($stmt, "ssssss", $playgroundId, $ip, $rating, $nickname, $comment, $date);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_close($stmt);
+    $sql = "UPDATE reviews SET nickname=?, comment=?, rating=?, review_date=? WHERE playground_id = ? AND ip = ?";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql))
+    {
+        http_response_code(500);
+        exit();
+    }
+    else
+    {
+        mysqli_stmt_bind_param($stmt, "ssssss", $nickname, $comment, $rating, $date, $playgroundId, $ip);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
 }
+
 
 header("Location: ../playground.php?id=".$playgroundId);
 $conn->close();

@@ -43,8 +43,37 @@ if (empty($lng) || (float)$lng < 2 || (float)$lng > 8) {
     $lng = test_input($lng);
 }
 
-// TODO: Location check
-$sql = "SELECT lat, lng FROM playgrounds";
+$updatePlayground = false;
+if (isset($_POST['action']) && isset($_POST['updateId'])) {
+    if ($_POST['action'] == "update")
+    {
+        // Check if user has rights to edit the playground
+        $updateId = $_POST['updateId'];
+        $sql = "SELECT ip FROM playgrounds WHERE id=".$updateId;
+        $result = $conn->query($sql);
+        if (!$result)
+        {
+            http_response_code(500);
+            exit();
+        }
+        $playgroundIp = ($result->fetch_row())[0];
+        if ($ip != $playgroundIp)
+        {
+            http_response_code(403); // Forbidden!
+            exit();
+        }
+
+        $updatePlayground = true;
+    }
+}
+
+if (!$updatePlayground)
+{
+    $sql = "SELECT lat, lng FROM playgrounds";
+} else {
+    $sql = "SELECT lat, lng FROM playgrounds WHERE NOT id=".$updateId;
+}
+
 $result = $conn->query($sql); 
 if (!$result) {
     http_response_code(500);
@@ -138,69 +167,93 @@ if (isset($_POST['cateringAvailable']))
 else
     $cateringAvailable = false;
 
-$sql = "SELECT MAX(id) FROM playgrounds";
-$result = $conn->query($sql); 
-if (!$result) {
+if (!$updatePlayground)
+{
+    $sql = "SELECT MAX(id) FROM playgrounds";
+    $result = $conn->query($sql); 
+    if (!$result) {
+        http_response_code(500);
+        exit();
+    }
+    $playgroundId = (int)($result -> fetch_row())[0] + 1;
+}
+else {
+    $playgroundId = $updateId;
+}
+
+
+$sql = "SELECT path FROM pictures WHERE playground_id=".$updateId;
+$result = $conn->query($sql);
+if (!$result)
+{
     http_response_code(500);
     exit();
 }
-$playgroundId = (int)($result -> fetch_row())[0] + 1;
+$path = ($result->fetch_row())[0];
+$noPictureFound = false;
+if (!isset($path) || empty($path))
+{
+    $noPictureFound = true;
+}
 
 // Upload the picture if set
-if(isset($_FILES["pictureToUpload"]["name"]) && !empty($_FILES["pictureToUpload"]["name"])) {
-    $target_dir = "../uploaded_pictures/";
-    $target_file = $target_dir."playground".$playgroundId.".".pathinfo($_FILES["pictureToUpload"]["name"], PATHINFO_EXTENSION);
-    $path_from_root = "uploaded_pictures/"."playground".$playgroundId.".".pathinfo($_FILES["pictureToUpload"]["name"], PATHINFO_EXTENSION);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-    // Check if image file is a actual image or fake image
-    $check = getimagesize($_FILES["pictureToUpload"]["tmp_name"]);
-    if($check !== false) {
+if (!$updatePlayground || $noPictureFound)
+{
+    if(isset($_FILES["pictureToUpload"]["name"]) && !empty($_FILES["pictureToUpload"]["name"])) {
+        $target_dir = "../uploaded_pictures/";
+        $target_file = $target_dir."playground".$playgroundId.".".pathinfo($_FILES["pictureToUpload"]["name"], PATHINFO_EXTENSION);
+        $path_from_root = "uploaded_pictures/"."playground".$playgroundId.".".pathinfo($_FILES["pictureToUpload"]["name"], PATHINFO_EXTENSION);
         $uploadOk = 1;
-    } else {
-        header("Location: ../add_playground.php?error=picturefile");
-        exit();
-    }
-    if ($uploadOk == 1)
-    {
-        // Check if file already exists
-        if (file_exists($target_file)) {
-            http_response_code(500);
+        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        // Check if image file is a actual image or fake image
+        $check = getimagesize($_FILES["pictureToUpload"]["tmp_name"]);
+        if($check !== false) {
+            $uploadOk = 1;
+        } else {
+            header("Location: ../add_playground.php?error=picturefile");
             exit();
         }
-        // Allow certain file formats
-        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-        && $imageFileType != "gif" ) {
-            header("Location: ../add_playground.php?error=picturefiletype");
-            exit();
-        }
-        // Check file size
-        if ($_FILES["pictureToUpload"]["size"] > 2 * 1024 * 1024) { // Should be less than 2 MB
-            header("Location: ../add_playground.php?error=picturesize");
-            exit();
-        }
-        
-
-        if (move_uploaded_file($_FILES["pictureToUpload"]["tmp_name"], $target_file)) {
-            $sql = "INSERT INTO pictures (playground_id, path) VALUES (?, ?)";
-            $stmt = mysqli_stmt_init($conn);
-            if (!mysqli_stmt_prepare($stmt, $sql))
-            {
+        if ($uploadOk == 1)
+        {
+            // Check if file already exists
+            if (file_exists($target_file)) {
                 http_response_code(500);
                 exit();
             }
-            else
-            {
-                mysqli_stmt_bind_param($stmt, "ss", $playgroundId, $path_from_root);
-                mysqli_stmt_execute($stmt);
-                mysqli_stmt_close($stmt);
+            // Allow certain file formats
+            if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif" ) {
+                header("Location: ../add_playground.php?error=picturefiletype");
+                exit();
             }
-        }
-        else {
-            http_response_code(500);
-            exit();
-        }
-    }    
+            // Check file size
+            if ($_FILES["pictureToUpload"]["size"] > 2 * 1024 * 1024) { // Should be less than 2 MB
+                header("Location: ../add_playground.php?error=picturesize");
+                exit();
+            }
+            
+
+            if (move_uploaded_file($_FILES["pictureToUpload"]["tmp_name"], $target_file)) {
+                $sql = "INSERT INTO pictures (playground_id, path) VALUES (?, ?)";
+                $stmt = mysqli_stmt_init($conn);
+                if (!mysqli_stmt_prepare($stmt, $sql))
+                {
+                    http_response_code(500);
+                    exit();
+                }
+                else
+                {
+                    mysqli_stmt_bind_param($stmt, "ss", $playgroundId, $path_from_root);
+                    mysqli_stmt_execute($stmt);
+                    mysqli_stmt_close($stmt);
+                }
+            }
+            else {
+                http_response_code(500);
+                exit();
+            }
+        }    
+    }
 }
 
 foreach($_POST as $key => $value)
@@ -216,20 +269,46 @@ foreach($_POST as $key => $value)
 }
 $uploadDate = date("Y-m-d");
 
-$sql = "INSERT INTO playgrounds (name, lat, lng, age_from, age_to, always_open, catering_available, ip, upload_date)
+if (!$updatePlayground)
+{
+    $sql = "INSERT INTO playgrounds (name, lat, lng, age_from, age_to, always_open, catering_available, ip, upload_date)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-$stmt = mysqli_stmt_init($conn);
+    $stmt = mysqli_stmt_init($conn);
 
-if (!mysqli_stmt_prepare($stmt, $sql))
-{
-    http_response_code(500);
-    exit();
+    if (!mysqli_stmt_prepare($stmt, $sql))
+    {
+        http_response_code(500);
+        exit();
+    }
+    else
+    {
+        mysqli_stmt_bind_param($stmt, "sssssssss", $name, $lat, $lng, $ageFrom, $ageTo, $alwaysOpen, $cateringAvailable, $ip, $uploadDate);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
+} else {
+    $sql = "UPDATE playgrounds SET name=?, lat=?, lng=?, age_from=?, age_to=?, always_open=?, catering_available=?, upload_date=? WHERE id=?";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql))
+    {  
+        http_response_code(500);
+        exit();
+    }
+    else
+    {
+        mysqli_stmt_bind_param($stmt, "sssssssss", $name, $lat, $lng, $ageFrom, $ageTo, $alwaysOpen, $cateringAvailable, $uploadDate, $updateId);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }   
 }
-else
-{
-    mysqli_stmt_bind_param($stmt, "sssssssss", $name, $lat, $lng, $ageFrom, $ageTo, $alwaysOpen, $cateringAvailable, $ip, $uploadDate);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_close($stmt);
+
+if ($updatePlayground) {
+    $sql = "DELETE FROM parts_map WHERE playground_id=".$playgroundId;
+    if (!$conn->query($sql))
+    {
+        http_response_code(500);
+        exit();
+    }
 }
 
 foreach($partsToInsert as $partId => $amount)
@@ -250,22 +329,37 @@ foreach($partsToInsert as $partId => $amount)
     }
 }
 
-
-$sql = "INSERT INTO reviews (playground_id, nickname, ip, rating, comment, review_date) VALUES (?, ?, ?, ?, ?, ?)";
-$stmt = mysqli_stmt_init($conn);
-
-if (!mysqli_stmt_prepare($stmt, $sql))
+if (!$updatePlayground)
 {
-    http_response_code(500);
-    exit();
+    $sql = "INSERT INTO reviews (playground_id, nickname, ip, rating, comment, review_date) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = mysqli_stmt_init($conn);
+    
+    if (!mysqli_stmt_prepare($stmt, $sql))
+    {
+        http_response_code(500);
+        exit();
+    }
+    else
+    {
+        mysqli_stmt_bind_param($stmt, "ssssss", $playgroundId, $nickname, $ip, $rating, $comment, $uploadDate);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
+} else {
+    $sql = "UPDATE reviews SET nickname=?, comment=?, rating=?, review_date=? WHERE playground_id = ? AND ip = ?";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql))
+    {
+        http_response_code(500);
+        exit();
+    }
+    else
+    {
+        mysqli_stmt_bind_param($stmt, "ssssss", $nickname, $comment, $rating, $uploadDate, $playgroundId, $ip);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
 }
-else
-{
-    mysqli_stmt_bind_param($stmt, "ssssss", $playgroundId, $nickname, $ip, $rating, $comment, $uploadDate);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_close($stmt);
-}
-
 
 header("Location: ../playground.php?id=".$playgroundId);
 $conn->close();

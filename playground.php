@@ -69,6 +69,7 @@
                 return;
             }
             $playgroundIp = $playground[8];
+            
             $lat = $playground[2];
             $lng = $playground[3];
             $date = DateTime::createFromFormat('Y-m-d', $playground[9]);
@@ -86,6 +87,16 @@
             if (!empty($picture_path) && isset($picture_path))
             {
                 echo '<img class="playgroundImage" src='.$picture_path.'><hr>';
+            }
+            if ($ip == $playgroundIp)
+            {
+                echo '
+                <hr>
+                    <h2>Toegevoegd door jou</h2>
+                    <p>Laatst bewerkt op: '.date_format($date,"d-m-Y").'</p>
+                    <a href="add_playground.php?action=edit&id='.$playgroundId.'" class="btn smallbtn">Speeltuin bewerken</a>
+                    <hr>
+                ';
             }
             echo'
                 <h2>Kaart</h2>
@@ -223,13 +234,30 @@
                 echo "Nog geen reviews";
             }
             $sql = "SELECT ip FROM reviews WHERE playground_id=".$playgroundId;
-            $result = $conn->query($sql); 
+            $result = $conn->query($sql);
+            if (!$result) {
+                http_response_code(500);
+                exit();
+            } 
             $alreadyReviewed = false;
             while ($row = $result -> fetch_row()) {
                 if ($row[0] == $ip)
                 {
                     $alreadyReviewed = true;
                 }
+            }
+            if ($alreadyReviewed)
+            {
+                $sql = "SELECT nickname, comment, rating FROM reviews WHERE playground_id=".$playgroundId." AND ip='".$ip."'";
+                $result = $conn->query($sql);
+                if (!$result) {
+                    http_response_code(500);
+                    exit();
+                }
+                $row = $result -> fetch_row();
+                $nickname = $row[0];
+                $comment = $row[1];
+                $rating = $row[2];
             }
             if ($ip != $playgroundIp && !$alreadyReviewed)
             {
@@ -252,7 +280,40 @@
                 ';
             }
             else if ($alreadyReviewed) {
-                echo "Je hebt al gereviewd!";
+                echo '<hr>
+                <div id="review">
+                    <h2>Review</h2>
+                    <p>Je hebt al gereviewd.</p>
+                    <button onclick="showEditReview()"class="btn smallbtn">Review bewerken</button>
+                </div>
+                <div id="editreview">
+                    <h2>Review bewerken</h2>
+                    <form action="includes/add_review.inc.php?id='.$_GET['id'].'" method="post">
+                        <input type="hidden" name="action" value="update">
+                        <label for="nickname">Gebruikersnaam:</label>
+                        <input type="text" name="nickname" minlength="4" maxlength="20" value="'.$nickname.'">
+                        <br>
+                        <label for="comment">Tekst:</label>
+                        <br>
+                        <textarea name="comment" rows="5" cols="60" minlength="18" maxlength ="240">'.$comment.'</textarea>
+                        <br>
+                        Zelf geef ik deze speeltuin het cijfer: <input type="number" name="rating" min="1" max="5" value="'.$rating.'">
+                        <br>
+                        TIP: Denk bijvoorbeeld aan: staat van onderhoud, omgeving, diversiteit
+                        <br>
+                        <input class="btn smallbtn" type="submit" value="Opslaan">
+                    </form>
+                </div>
+                <script>
+                    var review = document.getElementById("review");
+                    var editReview = document.getElementById("editreview");
+                    editReview.style.display = "none";
+                    function showEditReview()
+                    {
+                        review.style.display = "none";
+                        editReview.style.display = "block";
+                    }
+                </script>';
             }
             else {
                 echo "Je kan geen review meer toevoegen omdat je deze speeltuin zelf hebt geregistreed!";
