@@ -3,18 +3,18 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <title>Speeltuin Toevoegen</title>
+    <title>Zoek een Speeltuin - Toevoegen</title>
     <!-- Own CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">>
   </head>
   <body>
     <header>
-    <nav>
-        <ul>
-            <li id="logo"><a href="index.php">Speeltuinen</a></li>
-            <li ><a href="index.php">Kaart</a></li>
-            <li class="active"><a href="add_playground.php">Toevoegen</a></li>
-        </ul>
+        <nav>
+            <?php include "navigation.php"; navigation("add_playground"); ?>
         </nav>
     </header>
     <div id="content">
@@ -314,12 +314,12 @@
                 echo '<textarea name="comment" rows="5" cols="60" maxlength ="240">'.$comment.'</textarea>';
             ?>
             <br>
-            Zelf geef ik deze speeltuin het cijfer: 
+            Eigen cijfer (1 tot 5 sterren): 
             <?php 
                 echo '<input type="number" name="rating" min="1" max="5" value="'.$rating.'">';
             ?>
-            <br>
-            <i>TIP: Denk bijvoorbeeld aan: staat van onderhoud, omgeving, diversiteit...</i>
+            <br><br>
+            <i>TIP: Denk bij de beoordeling aan bijvoorbeeld de staat van onderhoud, omgeving, diversiteit...</i>
             <br><br>
             <?php 
                 if (!$editMode) {

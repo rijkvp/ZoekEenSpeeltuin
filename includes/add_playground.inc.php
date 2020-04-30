@@ -116,14 +116,14 @@ foreach($locations as $location)
     }
 }
 
-if (empty($ageFrom) || (int)$ageFrom < 0 || (int)$ageFrom > 18) {
+if (!isset($ageFrom) || (int)$ageFrom < 0 || (int)$ageFrom > 18) {
     http_response_code(400);
     exit();
 } else {
     $ageFrom = test_input($ageFrom);
 }
 
-if (empty($ageTo) || (int)$ageTo < 0 || (int)$ageTo > 18) {
+if (!isset($ageTo) || (int)$ageTo < 0 || (int)$ageTo > 18) {
     http_response_code(400);
     exit();
 } else {
@@ -182,7 +182,7 @@ else {
 }
 
 
-$sql = "SELECT path FROM pictures WHERE playground_id=".$updateId;
+$sql = "SELECT path FROM pictures WHERE playground_id=".$playgroundId;
 $result = $conn->query($sql);
 if (!$result)
 {
@@ -258,15 +258,16 @@ if (!$updatePlayground || $noPictureFound)
 
 foreach($_POST as $key => $value)
 {
-    if (strpos($key, 'part') === 0) 
+    if (strpos($key, 'part') !== false) 
     {
         if ($value != 0)
         {
-            $partId = (int)substr($key,4,1);
+            $partId = (int)substr($key,4);
             $partsToInsert[$partId] = (int)$value;
         }
     }
 }
+
 $uploadDate = date("Y-m-d");
 
 if (!$updatePlayground)

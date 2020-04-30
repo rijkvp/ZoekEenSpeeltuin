@@ -6,7 +6,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <title>Speeltuinen Website</title>
+    <title>Zoek een Speeltuin - Kaart</title>
     <!-- Leaflet -->
     <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
     <script src="libs/leaflet/leaflet.js"></script>
@@ -17,16 +17,15 @@
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <!-- Own JS -->
     <script src="js/util.js"></script>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   </head>
   <body>
     <header>
-    <nav>
-        <ul>
-            <li id="logo"><a href="index.php">Speeltuinen</a></li>
-            <li id="logosmall"><a href="index.php">ST</a></li>
-            <li class="active"><a href="index.php">Kaart</a></li>
-            <li><a href="add_playground.php">Toevoegen</a></li>
-        </ul>
+        <nav>
+            <?php include "navigation.php"; navigation("home"); ?>
         </nav>
     </header>
     <section id="main">

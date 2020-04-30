@@ -13,11 +13,15 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 
 ### Polishing
 
-- [x] Color Pallete
-- [x] Fix age filter
-- [x] Marker icon
-- [x] UI Fixes
-- [x] Error messages
+- [x] 0 age bug
+- [x] About page
+- [x] Link to Google Maps
+- [x] Logo include
+- [x] Give stars 1-5 text
+- [ ] Edit playground picture
+- [ ] On mobile -> Collapse filters
+- [ ] Test on mobile
+- [ ] Titles
 
 ### Security
 

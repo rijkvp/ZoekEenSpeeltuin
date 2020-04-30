@@ -3,7 +3,7 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <title>Speeltuinen Website</title>
+    <title>Zoek een Speeltuin - Speeltuin Informatie</title>
     <!-- Leaflet -->
     <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
     <script src="libs/leaflet/leaflet.js"></script>
@@ -12,15 +12,15 @@
     <!-- Own JS -->
     <script src="js/util.js"></script>
     <script src="js/selectedmarker.js"></script>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
   </head>
   <body>
     <header>
-    <nav>
-        <ul>
-            <li id="logo"><a href="index.php">Speeltuinen</a></li>
-            <li><a href="index.php">Kaart</a></li>
-            <li><a href="add_playground.php">Toevoegen</a></li>
-        </ul>
+        <nav>
+            <?php include "navigation.php"; navigation("none"); ?>
         </nav>
     </header>
     <div id="content">
@@ -83,7 +83,8 @@
             $picture_path = ($result -> fetch_row())[0];
             echo'
                 <p class="date">'.date_format($date,"d-m-Y").'</p>
-                <h1>'.$playground[1].'</h1>';
+                <h1>'.$playground[1].'</h1>
+                <a href="http://www.google.com/maps/place/'.$lat.','.$lng.'">Zie op Google Maps</a>';
             if (!empty($picture_path) && isset($picture_path))
             {
                 echo '<img class="playgroundImage" src='.$picture_path.'><hr>';
@@ -271,7 +272,7 @@
                     <br>
                     <textarea name="comment" rows="5" cols="60" minlength="18" maxlength ="240"></textarea>
                     <br>
-                    Zelf geef ik deze speeltuin het cijfer: <input type="number" name="rating" min="1" max="5" value="4">
+                    Eigen cijfer (1 tot 5 sterren): <input type="number" name="rating" min="1" max="5" value="4">
                     <br>
                     TIP: Denk bijvoorbeeld aan: staat van onderhoud, omgeving, diversiteit
                     <br>
@@ -297,7 +298,7 @@
                         <br>
                         <textarea name="comment" rows="5" cols="60" minlength="18" maxlength ="240">'.$comment.'</textarea>
                         <br>
-                        Zelf geef ik deze speeltuin het cijfer: <input type="number" name="rating" min="1" max="5" value="'.$rating.'">
+                        Eigen cijfer (1 tot 5 sterren): <input type="number" name="rating" min="1" max="5" value="'.$rating.'">
                         <br>
                         TIP: Denk bijvoorbeeld aan: staat van onderhoud, omgeving, diversiteit
                         <br>
