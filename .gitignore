@@ -1,2 +1,5 @@
 # Uploaded pictures
 uploaded_pictures/
+
+# Credentials
+includes/credentials.inc.php
