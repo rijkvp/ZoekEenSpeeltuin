@@ -1,9 +1,6 @@
 <?php
 
-$servername = "localhost";
-$dBUsername = "root";
-$dBPassword = "";
-$dBName = "database_website";
+include "credentials.inc.php";
 
 $conn = mysqli_connect($servername, $dBUsername, $dBPassword);
 
