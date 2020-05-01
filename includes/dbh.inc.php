@@ -5,16 +5,16 @@ include "credentials.inc.php";
 $conn = mysqli_connect($servername, $dBUsername, $dBPassword);
 
 if($conn->connect_error) {
-    die("Connection failed: ".mysqli_connect_error());
+    http_response_code(500);
+    exit();
 }
-
-$sql = "CREATE DATABASE IF NOT EXISTS playgrounds ";
+$sql = "CREATE DATABASE IF NOT EXISTS ".$dBName;
 if (!$conn->query($sql)) {
     http_response_code(500);
     exit();
 }
 
-$conn -> select_db("playgrounds");
+$conn -> select_db($dBName);
 
 $sql = "CREATE TABLE IF NOT EXISTS parts_map (
     playground_id int(11),
