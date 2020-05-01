@@ -18,9 +18,9 @@
     <!-- Own JS -->
     <script src="js/util.js"></script>
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   </head>
   <body>
     <header>
@@ -29,6 +29,7 @@
         </nav>
     </header>
     <section id="main">
+        <button id="filtersCollapse" class="btn smallbtn">Filters</button>
         <div id="filterspanel">
             <div id="filters">
             <h2>Filters</h2>
@@ -171,7 +172,20 @@
                 });
             </script>
         </div>
-        <div id="map"></div>
+        <script>
+            var coll = document.getElementById("filtersCollapse");
+            coll.addEventListener("click", function() {
+                this.classList.toggle("active");
+                var content = document.getElementById("filterspanel");
+                if (content.style.maxHeight){
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                } 
+            });
+        </script>
+        <div id="map">
+        </div>
     </section>
     <script>
         function requestPlaygroundData()

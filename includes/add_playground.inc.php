@@ -190,14 +190,28 @@ if (!$result)
     exit();
 }
 $path = ($result->fetch_row())[0];
-$noPictureFound = false;
+$pictureFound = true;
 if (!isset($path) || empty($path))
 {
-    $noPictureFound = true;
+    $pictureFound = false;
 }
 
+$uploadPicture = !$updatePlayground || !$pictureFound;
+
+if ($updatePlayground && $pictureFound)
+{
+    // Remove file
+    $sql = "DELETE FROM pictures WHERE path='".$path."'";
+    if (!$conn->query($sql))
+    {
+        http_response_code(500);
+        exit();
+    }
+    unlink("../".$path);
+    $uploadPicture = true;
+}
 // Upload the picture if set
-if (!$updatePlayground || $noPictureFound)
+if ($uploadPicture)
 {
     if(isset($_FILES["pictureToUpload"]["name"]) && !empty($_FILES["pictureToUpload"]["name"])) {
         $target_dir = "../uploaded_pictures/";

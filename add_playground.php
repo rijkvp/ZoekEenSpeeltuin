@@ -7,9 +7,9 @@
     <!-- Own CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <!-- Favicon -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">>
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   </head>
   <body>
     <header>
@@ -170,8 +170,10 @@
                 } else {
                     echo '
                         <tr>
-                            <td>Foto</td>
-                            <td>Al toegevoegd</td>
+                            <td>Foto Vervangen</td>
+                            <td>
+                                <input type="file" name="pictureToUpload">
+                            </td>
                         </tr>
                     ';
                 }
@@ -204,6 +206,7 @@
                             http_response_code(500);
                             exit();
                         }
+                        $partMap = array();
                         while($row = $result->fetch_row())
                         {
                             $partMap[(int)$row[0]] = (int)$row[1];

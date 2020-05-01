@@ -171,6 +171,10 @@ header {
     display: none;
 }
 
+#filtersCollapse {
+    display: none;
+}
+
 @media only screen and (max-width: 1000px) {
     #content {
         max-width: 600px;
@@ -193,20 +197,24 @@ header {
     #main {
         display: block;
     }
+    #filtersCollapse {
+        display: inline-block;
+    }
     #filterspanel {
+        max-height: 0;
         display: inline-block;
         height: auto;
         width: 100%;
         padding: 0px 0px;
+        transition: max-height 0.3s ease-out;
     }
     #filters {
         max-width: 80%;
         margin: auto;
     }
-    .filterdiv {}
     #map {
         display: inline-block;
-        height: 100vh;
+        height: calc(100vh - var(--heading-height));
         width: 100%;
     }
 }
@@ -417,7 +425,7 @@ nav li:hover:not(.active) {
 }
 
 #logo>a {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     text-transform: uppercase;
 }
 

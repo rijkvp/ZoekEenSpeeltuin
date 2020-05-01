@@ -18,10 +18,11 @@ A __dynamic__ website where users can add, view and rate playgrounds. The playgr
 - [x] Link to Google Maps
 - [x] Logo include
 - [x] Give stars 1-5 text
-- [ ] Edit playground picture
+- [x] Titles
+- [x] Favicons
+- [x] Edit playground picture
 - [ ] On mobile -> Collapse filters
 - [ ] Test on mobile
-- [ ] Titles
 
 ### Security
 
