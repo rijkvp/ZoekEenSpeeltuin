@@ -1,9 +1,10 @@
 <?php
-    include 'includes/dbh.inc.php';
+include 'includes/dbh.inc.php';
 ?>
-<!DOCTYPE html >
+<!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Zoek een Speeltuin - Kaart</title>
@@ -21,18 +22,22 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  </head>
-  <body>
+    <!-- AdSense -->
+    <script data-ad-client="ca-pub-0210402010508195" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+
+<body>
     <header>
         <nav>
-            <?php include "navigation.php"; navigation("home"); ?>
+            <?php include "navigation.php";
+            navigation("home"); ?>
         </nav>
     </header>
     <section id="main">
         <button id="filtersCollapse" class="btn smallbtn">Filters</button>
         <div id="filterspanel">
             <div id="filters">
-            <h2>Filters</h2>
+                <h2>Filters</h2>
                 <div class="filterdiv">
                     <h3>Beoordeling</h3>
                     <div id="ratingSlider"></div>
@@ -63,35 +68,32 @@
                 <div class="filterdiv">
                     <h3>Onderdelen</h3>
                     <?php
-                        include 'includes/parts.inc.php';
-                        echo '<table>';
-                        foreach ($parts as $part)
-                        {
-                            $inputname = "part".$part[0];
-                            echo'<tr>
+                    include 'includes/parts.inc.php';
+                    echo '<table>';
+                    foreach ($parts as $part) {
+                        $inputname = "part" . $part[0];
+                        echo '<tr>
                                     <td>
-                                        <label for="'.$inputname.'">'.$part[1].'</label>
+                                        <label for="' . $inputname . '">' . $part[1] . '</label>
                                     </td>
                                     <td>
                                         <div class="checkbox">
-                                            <input type="checkbox" onclick="changePartFilter(this)" name="'.$inputname.'">
+                                            <input type="checkbox" onclick="changePartFilter(this)" name="' . $inputname . '">
                                             <label></label>
                                         </div>
                                     </td>
                                 </tr>
                                 ';
-                        }
-                        echo '</table>';
+                    }
+                    echo '</table>';
                     ?>
-                </div>  
+                </div>
             </div>
             <script>
-                function applyFilters()
-                {
+                function applyFilters() {
                     var requiredParts = "";
                     for (var partId in partFilters) {
-                        if (partFilters[partId])
-                        {
+                        if (partFilters[partId]) {
                             requiredParts += partId.substring(4) + "%";
                         }
                     }
@@ -110,13 +112,13 @@
                     alwaysOpenFilter = value.checked;
                     applyFilters();
                 }
+
                 function changeCateringAvailable(value) {
                     cateringAvailableFilter = value.checked;
                     applyFilters();
                 }
 
-                function changePartFilter(value)
-                {
+                function changePartFilter(value) {
                     partFilters[value.name] = value.checked;
                     applyFilters();
                 }
@@ -177,19 +179,18 @@
             coll.addEventListener("click", function() {
                 this.classList.toggle("active");
                 var content = document.getElementById("filterspanel");
-                if (content.style.maxHeight){
+                if (content.style.maxHeight) {
                     content.style.maxHeight = null;
                 } else {
                     content.style.maxHeight = content.scrollHeight + "px";
-                } 
+                }
             });
         </script>
         <div id="map">
         </div>
     </section>
     <script>
-        function requestPlaygroundData()
-        {
+        function requestPlaygroundData() {
             // Get all of the playgrounds from the database with a GET request
             var http = new XMLHttpRequest();
             http.open("GET", "includes/get_playgrounds.inc.php", true);
@@ -197,10 +198,9 @@
             http.onload = () => displayMarkers(http.responseText);
         }
 
-        function requestFilteredPlaygroundData(minRating, minParts, minAge, maxAge, alwaysOpen, cateringAvailable, requiredParts)
-        {
+        function requestFilteredPlaygroundData(minRating, minParts, minAge, maxAge, alwaysOpen, cateringAvailable, requiredParts) {
             var http = new XMLHttpRequest();
-            http.open("GET", "includes/get_playgrounds.inc.php?minRating="+minRating+"&minParts="+minParts+"&minAge="+minAge+"&maxAge="+maxAge + "&alwaysOpen="+alwaysOpen+"&cateringAvailable="+cateringAvailable+"&requiredParts="+requiredParts, true);
+            http.open("GET", "includes/get_playgrounds.inc.php?minRating=" + minRating + "&minParts=" + minParts + "&minAge=" + minAge + "&maxAge=" + maxAge + "&alwaysOpen=" + alwaysOpen + "&cateringAvailable=" + cateringAvailable + "&requiredParts=" + requiredParts, true);
             http.send();
             http.onload = () => displayMarkers(http.responseText);
         }
@@ -210,94 +210,90 @@
         var current_lat;
         var current_lng;
         var map = L.map('map').setView([52.43, 5.42], 8);
-        var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        var tileLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
         });
         map.addLayer(tileLayer);
         var layerGroup = L.layerGroup().addTo(map);
-        var customOptions =
-        {
+        var customOptions = {
             'maxWidth': '240',
             'width': '240',
-            'className' : 'popup'
+            'className': 'popup'
         }
         var popup = L.popup(customOptions);
 
         var customIcon = L.icon({
             iconUrl: 'img/marker-icon.png',
             shadowUrl: 'img/marker-icon-shadow.png',
-            iconSize:     [32, 32],
-            iconAnchor:   [16, 16],
-            shadowSize:   [40, 40],
+            iconSize: [32, 32],
+            iconAnchor: [16, 16],
+            shadowSize: [40, 40],
             shadowAnchor: [20, 20],
-            popupAnchor:  [0, 0]
+            popupAnchor: [0, 0]
         });
 
         function openAddPlaygroundPopup(e) {
-            
+
             popup.setLatLng(e.latlng)
-                .setContent('<b class="coordlabel">' + e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4)
-                 + "</b><button class='btn smallbtn' onClick='addPlayground(" + e.latlng.lat + ", " + e.latlng.lng + ")'>Speeltuin toevoegen</button>")
+                .setContent('<b class="coordlabel">' + e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4) +
+                    "</b><button class='btn smallbtn' onClick='addPlayground(" + e.latlng.lat + ", " + e.latlng.lng + ")'>Speeltuin toevoegen</button>")
                 .openOn(map);
         }
 
         function addPlayground(lat, lng) {
-            window.location.replace("add_playground.php?lat="+lat+"&lng="+lng);
+            window.location.replace("add_playground.php?lat=" + lat + "&lng=" + lng);
         }
 
-        function displayMarkers(data)
-        {
+        function displayMarkers(data) {
             // Decode the JSON
             layerGroup.clearLayers();
-            try
-            {
+            try {
                 var playgrounds = JSON.parse(data);
-            }
-            catch
-            {
+            } catch {
                 return;
             }
-            for (var i = 0; i < playgrounds.length; i++)
-            {
-                var customOptions =
-                {
+            for (var i = 0; i < playgrounds.length; i++) {
+                var customOptions = {
                     'height': '400',
                     'maxWidth': '800',
                     'width': '500',
-                    'className' : 'popup'
+                    'className': 'popup'
                 }
                 var imageSrc = "";
                 var hasImage = false;
-                if (playgrounds[i][9] != null)
-                {
+                if (playgrounds[i][9] != null) {
                     hasImage = true;
                     imageSrc = playgrounds[i][9];
                 }
-                if (hasImage)
-                {
+                if (hasImage) {
                     var customPopup = L.popup(customOptions)
-                    .setContent('<div class="popupdiv popupdivimg"><img class="playgroundIcon" src="' + imageSrc + '"><h3><a class="headinglink" href="playground.php?id=' + playgrounds[i][0] + '">' + playgrounds[i][1] +
-                    '</a></h3><p><strong>Onderdelen:</strong> ' + playgrounds[i][6] +'</p><p><strong>Leeftijd:</strong> '
-                    + playgrounds[i][4] + " t/m " + playgrounds[i][5] +' jaar</p><p><span class="ratinglabelsmall">'
-                    + parseFloat(playgrounds[i][7]).toFixed(1) + '</span> <span class="ratingstars ratingsmall">' + makeStarLayout(parseFloat(playgrounds[i][7])) + '</span> ('
-                    + playgrounds[i][8] 
-                    + ' reviews) </p><p><a class="btn extrasmallbtn" href="playground.php?id=' + playgrounds[i][0] + '">Meer Info</a></p></div>');
+                        .setContent('<div class="popupdiv popupdivimg"><img class="playgroundIcon" src="' + imageSrc + '"><h3><a class="headinglink" href="playground.php?id=' + playgrounds[i][0] + '">' + playgrounds[i][1] +
+                            '</a></h3><p><strong>Onderdelen:</strong> ' + playgrounds[i][6] + '</p><p><strong>Leeftijd:</strong> ' +
+                            playgrounds[i][4] + " t/m " + playgrounds[i][5] + ' jaar</p><p><span class="ratinglabelsmall">' +
+                            parseFloat(playgrounds[i][7]).toFixed(1) + '</span> <span class="ratingstars ratingsmall">' + makeStarLayout(parseFloat(playgrounds[i][7])) + '</span> (' +
+                            playgrounds[i][8] +
+                            ' reviews) </p><p><a class="btn extrasmallbtn" href="playground.php?id=' + playgrounds[i][0] + '">Meer Info</a></p></div>');
                 } else {
                     var customPopup = L.popup(customOptions)
-                    .setContent('<div class="popupdiv"><h3><a class="headinglink" href="playground.php?id=' + playgrounds[i][0] + '">' + playgrounds[i][1] +
-                    '</a></h3><p><strong>Onderdelen:</strong> ' + playgrounds[i][6] +'</p><p><strong>Leeftijd:</strong> '
-                     + playgrounds[i][4] + " t/m " + playgrounds[i][5] +' jaar</p><p><span class="ratinglabelsmall">'
-                    + parseFloat(playgrounds[i][7]).toFixed(1) + '</span> <span class="ratingstars ratingsmall">' + makeStarLayout(parseFloat(playgrounds[i][7])) + '</span> ('
-                     + playgrounds[i][8] 
-                     + ' reviews) </p><p><a class="btn extrasmallbtn" href="playground.php?id=' + playgrounds[i][0] + '">Meer Info</a></p></div>');
+                        .setContent('<div class="popupdiv"><h3><a class="headinglink" href="playground.php?id=' + playgrounds[i][0] + '">' + playgrounds[i][1] +
+                            '</a></h3><p><strong>Onderdelen:</strong> ' + playgrounds[i][6] + '</p><p><strong>Leeftijd:</strong> ' +
+                            playgrounds[i][4] + " t/m " + playgrounds[i][5] + ' jaar</p><p><span class="ratinglabelsmall">' +
+                            parseFloat(playgrounds[i][7]).toFixed(1) + '</span> <span class="ratingstars ratingsmall">' + makeStarLayout(parseFloat(playgrounds[i][7])) + '</span> (' +
+                            playgrounds[i][8] +
+                            ' reviews) </p><p><a class="btn extrasmallbtn" href="playground.php?id=' + playgrounds[i][0] + '">Meer Info</a></p></div>');
                 }
-                
-                
-                L.marker([playgrounds[i][2], playgrounds[i][3]], {icon: customIcon}).addTo(layerGroup)
-                .bindPopup(customPopup);
+
+
+                L.marker([playgrounds[i][2], playgrounds[i][3]], {
+                        icon: customIcon
+                    }).addTo(layerGroup)
+                    .bindPopup(customPopup);
             }
         }
-        map.on('click', openAddPlaygroundPopup);        
+        map.on('click', openAddPlaygroundPopup);
+
+        showLocationMarker(map);
     </script>
-    </body>
+</body>
+
 </html>

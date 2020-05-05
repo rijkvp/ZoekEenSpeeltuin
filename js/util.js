@@ -18,3 +18,44 @@ function makeAllStarLayouts() {
         elements[i].innerHTML = makeStarLayout(parseFloat(elements[i].innerHTML));
     }
 }
+
+var map;
+
+function showLocationMarker(map) {
+    this.map = map
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, logLocationError);
+    } else {
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+function showPosition(position) {
+    var locationIcon = L.icon({
+        iconUrl: 'img/location-icon.png',
+        shadowUrl: 'img/marker-icon-shadow.png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16],
+        shadowSize: [40, 40],
+        shadowAnchor: [20, 20],
+        popupAnchor: [0, 0]
+    });
+    L.marker([position.coords.latitude, position.coords.longitude], { icon: locationIcon }).addTo(map);
+}
+
+function logLocationError(error) {
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+            console.log("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            console.log("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            console.log("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            console.log("An unknown error occurred.");
+            break;
+    }
+}

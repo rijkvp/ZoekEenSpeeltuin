@@ -10,6 +10,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <!-- AdSense -->
+    <script data-ad-client="ca-pub-0210402010508195" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   </head>
   <body>
     <header>
@@ -45,10 +47,10 @@
                             $msg = 'Upload een bestand dat een foto is!';
                             break;
                         case 'picturefiletype':
-                            $msg = 'Upload een foto met het bestandstype .JPG, .PNG, .JPEG of .GIF!';
+                            $msg = 'Upload een foto met het bestandstype .PNG, .JPEG, JPG of .GIF!';
                             break;
                         case 'picturesize':
-                            $msg = 'Upload een foto met een bestandsgrootte van minder dan 2 MB!';
+                            $msg = 'Upload een foto met een bestandsgrootte van minder dan 5 MB!';
                             break;
                         case 'location':
                             $msg = 'Deze locatie is niet geldig! Zorg dat er geen andere speeltuinen in de buurt zijn!';
@@ -314,7 +316,7 @@
             <label for="comment">Tekst (optioneel):</label>
             <br>
             <?php 
-                echo '<textarea name="comment" rows="5" cols="60" maxlength ="240">'.$comment.'</textarea>';
+                echo '<textarea name="comment" maxlength ="240">'.$comment.'</textarea>';
             ?>
             <br>
             Eigen cijfer (1 tot 5 sterren): 

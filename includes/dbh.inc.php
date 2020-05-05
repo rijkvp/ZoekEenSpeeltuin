@@ -23,9 +23,8 @@ $sql = "CREATE TABLE IF NOT EXISTS parts_map (
 )";
 
 if (!$conn->query($sql)) {
-    die("ERROR1 ".$conn->error);
-    //http_response_code(500);
-    //exit();
+    http_response_code(500);
+    exit();
 }
 
 $sql = "CREATE TABLE IF NOT EXISTS parts (
@@ -34,9 +33,8 @@ $sql = "CREATE TABLE IF NOT EXISTS parts (
 )";
 
 if (!$conn->query($sql)) {
-    die("ERROR2 ".$conn -> error);
-    //http_response_code(500);
-    //exit();
+    http_response_code(500);
+    exit();
 }
 
 $sql = "CREATE TABLE IF NOT EXISTS reviews (
@@ -49,9 +47,8 @@ $sql = "CREATE TABLE IF NOT EXISTS reviews (
 )";
 
 if (!$conn->query($sql)) {
-    die("ERROR1 ".$conn->error);
-    //http_response_code(500);
-    //exit();
+    http_response_code(500);
+    exit();
 }
 
 $sql = "CREATE TABLE IF NOT EXISTS pictures (
@@ -60,9 +57,8 @@ $sql = "CREATE TABLE IF NOT EXISTS pictures (
 )";
 
 if (!$conn->query($sql)) {
-    die("ERROR6 ".$conn->error);
-    //http_response_code(500);
-    //exit();
+    http_response_code(500);
+    exit();
 }
 
 $sql = "CREATE TABLE IF NOT EXISTS playgrounds (
@@ -79,13 +75,12 @@ $sql = "CREATE TABLE IF NOT EXISTS playgrounds (
 )";
 
 if (!$conn->query($sql)) {
-    die("ERROR3 ".$conn -> error);
-    //http_response_code(500);
-    //exit();
+    http_response_code(500);
+    exit();
 }
 
 
-$defaultparts = array("Schommel", "Daaimolen", "Zandbak", "Kabelbaan", "Waterpomp", "Parcours", "Wipwap", "Glijbaan", "Rekstok", "Klimrek", "Klimtoestel", "Trampoline", "Springkussen");
+$defaultparts = array("Schommel", "Daaimolen", "Zandbak", "Kabelbaan", "Waterpomp", "Parcours", "Wipwap","Wipkip", "Glijbaan", "Rekstok", "Klimrek", "Klimtoestel", "Trampoline", "Springkussen");
 sort($defaultparts);
 
 foreach($defaultparts as $part)
@@ -94,9 +89,8 @@ foreach($defaultparts as $part)
     $result = $conn->query($sql); 
 
     if (!$result) {
-        die("ERROR ".$conn -> error);
-        //http_response_code(500);
-        //exit();
+        http_response_code(500);
+        exit();
     }
     $potentialValue = $result->fetch_row()[0];
 
@@ -106,9 +100,8 @@ foreach($defaultparts as $part)
         $stmt = mysqli_stmt_init($conn);
         if (!mysqli_stmt_prepare($stmt, $sql))
         {
-            die ("FAIL: ".$stmt->error);
-            //http_response_code(500);
-            //exit();
+            http_response_code(500);
+            exit();
         }
         else
         {

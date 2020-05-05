@@ -241,7 +241,7 @@ if ($uploadPicture)
                 exit();
             }
             // Check file size
-            if ($_FILES["pictureToUpload"]["size"] > 2 * 1024 * 1024) { // Should be less than 2 MB
+            if ($_FILES["pictureToUpload"]["size"] > 5 * 1024 * 1024) { // Should be less than 5 MB
                 header("Location: ../add_playground.php?error=picturesize");
                 exit();
             }

@@ -8,10 +8,12 @@ function setupMap(lat, lng) {
 
     var map = L.map('smallmap').setView([lat, lng], 16);
 
-    var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    var tileLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
     });
     map.addLayer(tileLayer);
 
     L.marker([lat, lng], { icon: customIcon }).addTo(map);
+
+    showLocationMarker(map)
 }
