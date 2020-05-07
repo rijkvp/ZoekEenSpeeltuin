@@ -87,7 +87,7 @@
                 <h1>' . $playground[1] . '</h1>
                 <a href="http://www.google.com/maps/place/' . $lat . ',' . $lng . '">Zie op Google Maps</a>';
             if (!empty($picture_path) && isset($picture_path)) {
-                echo '<img class="playgroundImage" src=' . $picture_path . '>';
+                echo '<hr><img class="playgroundImage" src=' . $picture_path . '>';
             }
             if ($ip == $playgroundIp) {
                 echo '
@@ -140,14 +140,23 @@
                 http_response_code(500);
                 exit();
             }
-            echo '<table>
-                    <tr><th>Onderdeel</th><th>Aantal</th></tr>';
-            while ($playground = $result->fetch_row()) {
-                echo '  <tr>
-                            <td>' . $parts[$playground[0] - 1] . '</td>
-                            <td>' . $playground[1] . '</td> 
-                        </tr>';
+            $partsList = array();
+            while ($playground = $result->fetch_row()) { 
+                $partsList[$parts[$playground[0] - 1]] = $playground[1];
             }
+            if (count($partsList) > 0) {
+                echo '<table>
+                <tr><th>Onderdeel</th><th>Aantal</th></tr>';
+                foreach ($partsList as $name=>$count) {
+                    echo '  <tr>
+                        <td>' . $name . '</td>
+                        <td>' . $count . '</td> 
+                    </tr>';
+                }
+            } else {
+                echo 'De uploader heeft geen onderdelen toegevoegd aan deze speeltuin!';
+            }
+
             echo '  </table><hr>
                     <h2>Reviews</h2>';
             $sql = "SELECT AVG(rating) FROM reviews WHERE playground_id=" . $playgroundId;

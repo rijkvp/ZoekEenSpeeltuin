@@ -55,7 +55,7 @@ h3 {
 }
 
 h1 {
-    font-size: 3rem;
+    font-size: 3.2rem;
 }
 
 h2 {
@@ -153,6 +153,7 @@ header {
 }
 
 #filterspanel {
+    background-color: #f8f8f8;
     overflow: auto;
     width: 200px;
     height: calc(100vh - var(--heading-height));
@@ -440,7 +441,7 @@ textarea {
 }
 .playgroundImage {
     max-width: 800px;
-    max-height: 600px;
+    max-height: 1600px;
 }
 .ratinglabel {
     font-size: 2rem;
@@ -482,6 +483,32 @@ textarea {
 .headinglink:hover {
     color: black !important;
     text-decoration: underline;
+}
+#minPartsSlider {
+    width: 60%;
+    display: inline-block;
+}
+.inline {
+    display: flex;
+    align-items: center;
+}
+.inline button {
+    border: 1px solid black;
+    border-radius: 0px;
+    background-color: white;
+    display: inline-block;
+    font-size: 1.3rem;
+    font-weight: bold;
+    height: 18px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 28px;
+}
+#content h1 {
+    margin-bottom: 36px;
+}
+#content h2 {
+    margin-bottom: 12px;
 }
 
 /* LOGO'S */

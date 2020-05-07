@@ -159,10 +159,14 @@ for ($x = 0; $x < $length; $x++)
         exit();
     }
     $partString = "";
+    $counter = 0;
     while ($row = $result -> fetch_row()) {
+        $counter++;
         $partString .= $row[1]."x ".$parts[$row[0] - 1].", ";
     }
     $partString = substr($partString, 0, -2);
+    if ($counter == 0)
+        $partString = "Geen onderdelen";
     
     // GET THE AVERAGE RATING
     $sql = "SELECT AVG(rating) FROM reviews WHERE playground_id=".$playgroundId;

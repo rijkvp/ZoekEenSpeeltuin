@@ -45,8 +45,13 @@ include 'includes/dbh.inc.php';
                 </div>
                 <div class="filterdiv">
                     <h3>Min. Onderdelen</h3>
-                    <div id="minPartsSlider"></div>
+                    <div class="inline">
+                        <button id="subMinPartsSlider">-</button>
+                        <div id="minPartsSlider"></div>
+                        <button id="addMinPartsSlider">+</button>
+                    </div>
                     <span id="minPartsSliderValue">0</span>
+                    
                 </div>
                 <div class="filterdiv">
                     <h3>Leeftijd / Uitdaging</h3>
@@ -149,7 +154,17 @@ include 'includes/dbh.inc.php';
                         'max': 20,
                     }
                 });
-                minPartsSlider.noUiSlider.on('change', applyFilters);
+                var subMinPartsSlider = document.getElementById('subMinPartsSlider');
+
+                subMinPartsSlider.addEventListener('click', function () {
+                    minPartsSlider.noUiSlider.set(parseFloat(minPartsSlider.noUiSlider.get()) - 1);
+                });
+                var addMinPartsSlider = document.getElementById('addMinPartsSlider');
+                addMinPartsSlider.addEventListener('click', function () {
+                    minPartsSlider.noUiSlider.set(parseFloat(minPartsSlider.noUiSlider.get()) + 1.0);
+                });
+
+                minPartsSlider.noUiSlider.on('set', applyFilters);
                 minPartsSlider.noUiSlider.on('update', function(value) {
                     minPartsFilter = value;
                     document.getElementById('minPartsSliderValue').innerHTML = "Minimaal " + Math.round(value);
@@ -215,12 +230,6 @@ include 'includes/dbh.inc.php';
         });
         map.addLayer(tileLayer);
         var layerGroup = L.layerGroup().addTo(map);
-        var customOptions = {
-            'maxWidth': '240',
-            'width': '240',
-            'className': 'popup'
-        }
-        var popup = L.popup(customOptions);
 
         var customIcon = L.icon({
             iconUrl: 'img/marker-icon.png',
@@ -231,18 +240,6 @@ include 'includes/dbh.inc.php';
             shadowAnchor: [20, 20],
             popupAnchor: [0, 0]
         });
-
-        function openAddPlaygroundPopup(e) {
-
-            popup.setLatLng(e.latlng)
-                .setContent('<b class="coordlabel">' + e.latlng.lat.toFixed(4) + ", " + e.latlng.lng.toFixed(4) +
-                    "</b><button class='btn smallbtn' onClick='addPlayground(" + e.latlng.lat + ", " + e.latlng.lng + ")'>Speeltuin toevoegen</button>")
-                .openOn(map);
-        }
-
-        function addPlayground(lat, lng) {
-            window.location.replace("add_playground.php?lat=" + lat + "&lng=" + lng);
-        }
 
         function displayMarkers(data) {
             // Decode the JSON
@@ -290,7 +287,6 @@ include 'includes/dbh.inc.php';
                     .bindPopup(customPopup);
             }
         }
-        map.on('click', openAddPlaygroundPopup);
 
         showLocationMarker(map);
     </script>
