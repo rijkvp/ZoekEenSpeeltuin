@@ -20,5 +20,5 @@ function setupMap(lat, lng) {
 
     L.marker([lat, lng], { icon: customIcon }).addTo(map);
 
-    showLocation(map)
+    showLocation(map, false)
 }

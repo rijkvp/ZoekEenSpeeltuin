@@ -80,7 +80,7 @@ if (!$conn->query($sql)) {
 }
 
 
-$defaultparts = array("Tennistafel", "Goal", "Basket", "Bankje / Picknicktafel", "Schommel", "Daaimolen", "Zandbak", "Kabelbaan", "Waterpomp", "Parcours", "Wipwap","Wipkip", "Glijbaan", "Rekstok", "Klimrek", "Klimtoestel", "Trampoline", "Springkussen");
+$defaultparts = array("Tafeltennistafel", "Goal", "Basket", "Bankje / Picknicktafel", "Schommel", "Daaimolen", "Zandbak", "Kabelbaan", "Waterpomp", "Parcours", "Wipwap","Wipkip", "Glijbaan", "Rekstok", "Klimrek", "Klimtoestel", "Trampoline", "Springkussen");
 sort($defaultparts);
 
 foreach($defaultparts as $part)

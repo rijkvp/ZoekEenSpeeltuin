@@ -21,9 +21,11 @@ function makeAllStarLayouts() {
 
 var map;
 var currentPosition;
+var goToLocation = false;
 
-function showLocation(map) {
+function showLocation(map, goToLocation = true) {
     this.map = map
+    this.goToLocation = goToLocation;
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, logLocationError);
     } else {
@@ -31,9 +33,18 @@ function showLocation(map) {
     }
 }
 
+function goToLocation() {
+    if (currentPosition && goToLocation) {
+        map.flyTo([currentPosition.coords.latitude, currentPosition.coords.longitude], 14);
+    }
+}
+
 function showPosition(position) {
     currentPosition = position;
-    map.setView([position.coords.latitude, position.coords.longitude], 14);
+    if (this.goToLocation) {
+        map.setView([position.coords.latitude, position.coords.longitude], 12);
+        map.flyTo([currentPosition.coords.latitude, currentPosition.coords.longitude], 14);
+    }
     var locationIcon = L.icon({
         iconUrl: 'img/location-icon.png',
         shadowUrl: 'img/marker-icon-shadow.png',
@@ -44,12 +55,6 @@ function showPosition(position) {
         popupAnchor: [0, 0]
     });
     L.marker([position.coords.latitude, position.coords.longitude], { icon: locationIcon }).addTo(map);
-}
-
-function goToLocation() {
-    if (currentPosition) {
-        map.flyTo([currentPosition.coords.latitude, currentPosition.coords.longitude], 14);
-    }
 }
 
 function logLocationError(error) {
