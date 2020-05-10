@@ -36,7 +36,7 @@ include 'includes/dbh.inc.php';
     </header>
     <section id="main">
         <button id="filtersCollapse" class="btn extrasmallbtn">Filters</button>
-        <button id="locationButton" onclick="goToLocation()" class="mapbtn"><img src="img/my-location.png"></button>
+        <button id="locationButton" onclick="flyToLocation()" class="mapbtn"><img src="img/my-location.png"></button>
         <div id="filterspanel">
             
             <div id="filters">

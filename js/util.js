@@ -33,8 +33,8 @@ function showLocation(map, goToLocation = true) {
     }
 }
 
-function goToLocation() {
-    if (currentPosition && goToLocation) {
+function flyToLocation() {
+    if (currentPosition) {
         map.flyTo([currentPosition.coords.latitude, currentPosition.coords.longitude], 14);
     }
 }
