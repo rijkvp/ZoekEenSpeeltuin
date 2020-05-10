@@ -22,6 +22,7 @@ include 'includes/dbh.inc.php';
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
     <!-- AdSense -->
     <script data-ad-client="ca-pub-0210402010508195" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
@@ -34,8 +35,10 @@ include 'includes/dbh.inc.php';
         </nav>
     </header>
     <section id="main">
-        <button id="filtersCollapse" class="btn smallbtn">Filters</button>
+        <button id="filtersCollapse" class="btn extrasmallbtn">Filters</button>
+        <button id="locationButton" onclick="goToLocation()" class="mapbtn"><img src="img/my-location.png"></button>
         <div id="filterspanel">
+            
             <div id="filters">
                 <h2>Filters</h2>
                 <div class="filterdiv">
@@ -51,7 +54,7 @@ include 'includes/dbh.inc.php';
                         <button id="addMinPartsSlider">+</button>
                     </div>
                     <span id="minPartsSliderValue">0</span>
-                    
+
                 </div>
                 <div class="filterdiv">
                     <h3>Leeftijd / Uitdaging</h3>
@@ -93,6 +96,7 @@ include 'includes/dbh.inc.php';
                     echo '</table>';
                     ?>
                 </div>
+                <p class="copyright">Copyright &copy; 2020 - ZoekEenSpeeltuin</p>
             </div>
             <script>
                 function applyFilters() {
@@ -156,11 +160,11 @@ include 'includes/dbh.inc.php';
                 });
                 var subMinPartsSlider = document.getElementById('subMinPartsSlider');
 
-                subMinPartsSlider.addEventListener('click', function () {
+                subMinPartsSlider.addEventListener('click', function() {
                     minPartsSlider.noUiSlider.set(parseFloat(minPartsSlider.noUiSlider.get()) - 1);
                 });
                 var addMinPartsSlider = document.getElementById('addMinPartsSlider');
-                addMinPartsSlider.addEventListener('click', function () {
+                addMinPartsSlider.addEventListener('click', function() {
                     minPartsSlider.noUiSlider.set(parseFloat(minPartsSlider.noUiSlider.get()) + 1.0);
                 });
 
@@ -196,7 +200,9 @@ include 'includes/dbh.inc.php';
                 var content = document.getElementById("filterspanel");
                 if (content.style.maxHeight) {
                     content.style.maxHeight = null;
+                    content.style.display = "none";
                 } else {
+                    content.style.display = "inline-block";
                     content.style.maxHeight = content.scrollHeight + "px";
                 }
             });
@@ -224,9 +230,15 @@ include 'includes/dbh.inc.php';
 
         var current_lat;
         var current_lng;
-        var map = L.map('map').setView([52.43, 5.42], 8);
-        var tileLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+        var map = L.map('map').setView([52.43, 5.42], 9);
+        var tileLayer = L.tileLayer('https://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaart/EPSG:3857/{z}/{x}/{y}.png', {
+            minZoom: 8,
+            maxZoom: 19,
+            bounds: [
+                [50.5, 3.25],
+                [54, 7.6]
+            ],
+            attribution: 'Kaartgegevens &copy; <a href="kadaster.nl">Kadaster</a>'
         });
         map.addLayer(tileLayer);
         var layerGroup = L.layerGroup().addTo(map);
@@ -287,8 +299,7 @@ include 'includes/dbh.inc.php';
                     .bindPopup(customPopup);
             }
         }
-
-        showLocationMarker(map);
+        showLocation(map);
     </script>
 </body>
 

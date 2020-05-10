@@ -11,6 +11,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
     <!-- Leaflet -->
     <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
     <script src="libs/leaflet/leaflet.js"></script>
@@ -182,9 +183,15 @@
                 var currentLat = 52.379191;
                 var currentLng = 4.900956;
 
-                var map = L.map('smallmap').setView([52.43, 5.42], 8);
-                var tileLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+                var map = L.map('smallmap').setView([52.43, 5.42], 9);
+                var tileLayer = L.tileLayer('https://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaart/EPSG:3857/{z}/{x}/{y}.png', {
+                    minZoom: 8,
+                    maxZoom: 19,
+                    bounds: [
+                        [50.5, 3.25],
+                        [54, 7.6]
+                    ],
+                    attribution: 'Kaartgegevens &copy; <a href="kadaster.nl">Kadaster</a>'
                 });
                 map.addLayer(tileLayer);
                 map.on('click', function(e) {
@@ -192,8 +199,8 @@
                     currentLng = e.latlng.lng;
                     updateLocation();
                 });
-                
-                showLocationMarker(map);
+
+                showLocation(map);
 
                 var customIcon = L.icon({
                     iconUrl: 'img/marker-icon.png',
@@ -210,15 +217,13 @@
 
 
                 navigator.geolocation.getCurrentPosition(setDefaultPosition, null);
-                function setDefaultPosition(position)
-                {
+
+                function setDefaultPosition(position) {
                     currentLat = position.coords.latitude;
                     currentLng = position.coords.longitude;
                     updateLocation();
                 }
 
-                
-                
                 var latInput = document.getElementById('lat');
                 latInput.addEventListener('change', function(e) {
                     currentLat = e.target.value;
@@ -230,29 +235,47 @@
                     updateLocation();
                 });
 
-                function updateLocation()
-                {
+                function updateLocation() {
                     marker.setLatLng([currentLat, currentLng]).addTo(map);
                     latInput.value = parseFloat(currentLat).toFixed(4);
                     lngInput.value = parseFloat(currentLng).toFixed(4);
                 }
-
             </script>
             <hr>
             <h2>Onderdelen</h2>
             <table>
+                </script>
                 <?php
                 include 'includes/parts.inc.php';
                 if (!$editMode) {
                     foreach ($parts as $part) {
                         $inputname = "part" . $part[0];
+                        $subButtonId = "subPart" . $part[0];
+                        $addButtonId = "addPart" . $part[0];
                         echo
                             '<tr>
                                 <td>
                                     <label for="' . $inputname . '">' . $part[1] . '</label>
                                 </td>
                                 <td>
-                                    <input type="number" name="' . $inputname . '" min="0" max="10" value="0">
+                                    <button type="button" class="addSubButton" id="' . $subButtonId . '"> - </button>
+                                    <input type="number" id="' . $inputname . '" name="' . $inputname . '" min="0" max="20" value="0">
+                                    <button type="button" class="addSubButton" id="' . $addButtonId . '"> + </button>
+                                    <script>
+                                        var ' . $inputname . ' = document.getElementById("' . $inputname . '");
+                                        var ' . $subButtonId . ' = document.getElementById("' . $subButtonId . '");
+                                        var ' . $addButtonId . ' = document.getElementById("' . $addButtonId . '");
+                                        ' . $subButtonId . '.addEventListener("click", function () {
+                                            var newValue = parseFloat(' . $inputname . '.value) - 1;
+                                            if (newValue >= 0 && newValue <= 20)
+                                                ' . $inputname . '.value = newValue;
+                                        });
+                                        ' . $addButtonId . '.addEventListener("click", function () {
+                                            var newValue = parseFloat(' . $inputname . '.value) + 1;
+                                            if (newValue >= 0 && newValue <= 20)
+                                                ' . $inputname . '.value = newValue;
+                                        });
+                                    </script>
                                 </td>
                             </tr>';
                     }

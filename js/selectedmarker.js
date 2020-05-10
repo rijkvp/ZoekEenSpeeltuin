@@ -7,13 +7,18 @@ function setupMap(lat, lng) {
     });
 
     var map = L.map('smallmap').setView([lat, lng], 16);
-
-    var tileLayer = L.tileLayer('https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    var tileLayer = L.tileLayer('https://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaart/EPSG:3857/{z}/{x}/{y}.png', {
+        minZoom: 8,
+        maxZoom: 19,
+        bounds: [
+            [50.5, 3.25],
+            [54, 7.6]
+        ],
+        attribution: 'Kaartgegevens &copy; <a href="kadaster.nl">Kadaster</a>'
     });
     map.addLayer(tileLayer);
 
     L.marker([lat, lng], { icon: customIcon }).addTo(map);
 
-    showLocationMarker(map)
+    showLocation(map)
 }

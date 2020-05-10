@@ -20,8 +20,9 @@ function makeAllStarLayouts() {
 }
 
 var map;
+var currentPosition;
 
-function showLocationMarker(map) {
+function showLocation(map) {
     this.map = map
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, logLocationError);
@@ -31,6 +32,8 @@ function showLocationMarker(map) {
 }
 
 function showPosition(position) {
+    currentPosition = position;
+    map.setView([position.coords.latitude, position.coords.longitude], 14);
     var locationIcon = L.icon({
         iconUrl: 'img/location-icon.png',
         shadowUrl: 'img/marker-icon-shadow.png',
@@ -41,6 +44,12 @@ function showPosition(position) {
         popupAnchor: [0, 0]
     });
     L.marker([position.coords.latitude, position.coords.longitude], { icon: locationIcon }).addTo(map);
+}
+
+function goToLocation() {
+    if (currentPosition) {
+        map.flyTo([currentPosition.coords.latitude, currentPosition.coords.longitude], 14);
+    }
 }
 
 function logLocationError(error) {
