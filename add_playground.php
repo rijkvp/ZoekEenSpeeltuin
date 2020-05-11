@@ -57,7 +57,7 @@
                         $msg = 'Upload een foto met het bestandstype .PNG, .JPEG, JPG of .GIF!';
                         break;
                     case 'picturesize':
-                        $msg = 'Upload een foto met een bestandsgrootte van minder dan 5 MB!';
+                        $msg = 'Upload een foto met een bestandsgrootte van minder dan 12 MB!';
                         break;
                     case 'location':
                         $msg = 'Deze locatie is niet geldig! Zorg dat er geen andere speeltuinen in de buurt zijn!';
