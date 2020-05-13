@@ -46,6 +46,7 @@ h5 {
     font-weight: bold;
     text-transform: uppercase;
     font-family: var(--heading-font);
+    color: #222;
 }
 
 h3 {
@@ -146,10 +147,19 @@ header {
     min-height: calc(100vh - var(--heading-height));
 }
 
-#content {
+#content,
+footer {
     max-width: 800px;
     margin: auto;
+}
+
+#content {
     padding-bottom: 50px;
+}
+
+footer {
+    padding-bottom: 16px;
+    font-size: 0.9rem;
 }
 
 #filterspanel {
@@ -166,6 +176,11 @@ header {
 
 #map {
     flex: 1;
+}
+
+p {
+    word-wrap: wrap;
+    word-break: break-all;
 }
 
 
@@ -308,33 +323,30 @@ textarea {
 }
 
 @media only screen and (max-width: 1000px) {
-    #content {
+    #content,
+    footer {
         max-width: 600px;
     }
-    ;
 }
 
-
-}
 @media only screen and (max-width: 800px) {
-    #content {
+    #content,
+    footer {
         max-width: 400px;
     }
-    
     textarea {
         width: 30em;
         height: 8em;
     }
 }
+
 @media only screen and (max-width: 750px) {
     #main {
         display: block;
     }
-    
     #filtersCollapse {
         display: block;
     }
-    
     #filterspanel {
         display: none;
         max-height: 0;
@@ -343,164 +355,183 @@ textarea {
         padding: 0px 0px;
         transition: max-height 0.3s ease-out;
     }
-    
     #filters {
         max-width: 80%;
         margin: auto;
     }
-    
     #map {
         display: inline-block;
         height: calc(100vh - var(--heading-height));
         width: 100%;
     }
 }
+
 @media only screen and (max-width: 580px) {
     #logo {
         display: none;
     }
-    
     #logosmall {
         display: flex;
     }
-    
     textarea {
         width: 20em;
         height: 20em;
     }
 }
+
 @media only screen and (max-width: 440px) {
-    #content {
+    #content,
+    footer {
         max-width: 300px;
     }
-    
     nav li {
         padding: 0px 14px;
     }
-    
     nav li#logosmall {
         padding: 0px 20px;
     }
-    
     td,
     input {
         max-width: 200px;
     }
 }
+
 @media only screen and (max-width: 384px) {
     nav li {
         padding: 0px 10px;
     }
-    
     textarea {
         width: 18em;
         height: 20em;
     }
-    
     td,
     input {
         max-width: 160px;
     }
 }
+
 @media only screen and (max-width: 340px) {
     nav li {
         padding: 0px 10px;
     }
-    
     textarea {
         width: 18em;
         height: 20em;
     }
 }
 
+
 /* SMALL ELEMENT STYLING */
+
 .review {
     background-color: #eee;
     padding: 20px 10px;
 }
+
 .reviewNickName {
     font-size: 1.1rem;
 }
+
 .reviewCount {
     font-size: 0.9rem;
     color: rgb(87, 87, 87);
 }
+
 .noUi-connect {
     background-color: var(--second-color);
 }
+
 .filledrating {
     color: var(--rating-fill-color);
 }
+
 .emptyrating {
     color: var(--rating-bg-color);
 }
+
 .coordlabel {
     font-weight: bold;
     color: rgb(32, 32, 32);
     font-size: 1.4rem;
 }
+
 .playgroundImage {
     max-width: 800px;
     max-height: 1600px;
 }
+
 .ratinglabel {
     font-size: 2rem;
     font-weight: bold;
     color: var(--rating-fill-color);
 }
+
 .ratinglabelsmall {
     font-size: 1.3rem;
     font-weight: bold;
     color: var(--rating-fill-color);
 }
+
 .ratingstars {
     font-size: 2rem;
 }
+
 .ratingsmall {
     font-size: 1.5rem;
 }
+
 .filterdiv {
     padding: 14px 0px;
 }
+
 #smallmap {
     height: 400px;
 }
+
 .date {
     text-align: right;
     letter-spacing: 2px;
     color: #666;
 }
+
 .playgroundIcon {
     max-width: 70px;
     max-height: 70px;
 }
+
 .headinglink {
     color: black !important;
     text-decoration: none;
     font-family: var(--heading-font);
     font-size: 1.4rem;
 }
+
 .headinglink:hover {
     color: black !important;
     text-decoration: underline;
 }
+
 .inline .noUi-target {
     width: 80%;
     display: inline-block;
 }
+
 .noUi-handle {
     width: 16px !important;
     right: -8px !important;
 }
+
 .noUi-handle:before,
 .noUi-handle:after {
     content: "" !important;
     height: 0px;
 }
+
 .inline {
     display: flex;
     align-items: center;
 }
+
 .inline button {
     background-color: white;
     display: inline-block;
@@ -517,6 +548,7 @@ textarea {
     box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB;
     color: #555;
 }
+
 .addSubButton {
     width: 24px;
     height: 24px;
@@ -528,25 +560,32 @@ textarea {
     box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB;
     color: #555;
 }
+
 .inline button:nth-child(1) {
     margin-right: 10px;
 }
+
 .inline button:nth-child(3) {
     margin-left: 8px;
 }
+
 #content h1 {
-    margin-bottom: 36px;
+    margin-bottom: 24px;
 }
+
 #content h1:nth-child(1) {
     margin-top: 36px;
 }
+
 #content h2 {
     margin-bottom: 12px;
 }
+
 .copyright {
     color: #888;
     font-size: 12px;
 }
+
 #locationButton {
     position: absolute;
     top: 60px;
@@ -554,6 +593,7 @@ textarea {
     padding: 10px;
     z-index: 1000;
 }
+
 #filtersCollapse {
     position: absolute;
     top: 60px;
@@ -561,6 +601,7 @@ textarea {
     padding: 10px;
     z-index: 1000;
 }
+
 .mapbtn {
     height: 32px;
     width: 32px;
@@ -569,27 +610,34 @@ textarea {
     border-radius: 4px;
     box-shadow: 1px 1px 5px rgb(54, 54, 54);
 }
+
 .mapbtn img {
     height: 24px;
     width: 24px;
 }
 
+
 /* LOGO'S */
+
 #logo,
 #smalllogo {
     background-color: var(--logo-bg-color);
     letter-spacing: 1px;
 }
+
 #logo>a {
     font-size: 1.4rem;
     text-transform: uppercase;
 }
+
 #logosmall>a {
     font-size: 2rem;
     text-transform: uppercase;
 }
 
+
 /* ERRORS */
+
 .errordiv {
     background-color: rgb(255, 237, 136);
     color: rgb(102, 0, 0);
@@ -597,15 +645,19 @@ textarea {
     margin: 20px 0px;
 }
 
+
 /* CHECKBOXES */
+
 .checkbox {
     display: inline-flex;
     cursor: pointer;
     position: relative;
 }
+
 .checkbox>label {
     padding-left: 10px;
 }
+
 .checkbox>input {
     height: 20px;
     width: 20px;
@@ -620,10 +672,12 @@ textarea {
     background-color: #666;
     cursor: pointer;
 }
+
 .checkbox>input:checked {
     border: 1px solid rgb(92, 92, 92);
     background-color: var(--second-color);
 }
+
 .checkbox>input:checked+label::before {
     pointer-events: none;
     content: '\2713';

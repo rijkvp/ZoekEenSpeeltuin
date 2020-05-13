@@ -14,7 +14,7 @@ function setupMap(lat, lng) {
             [50.5, 3.25],
             [54, 7.6]
         ],
-        attribution: 'Kaartgegevens &copy; <a href="kadaster.nl">Kadaster</a>'
+        attribution: 'Kaartgegevens &copy; <a href="https://kadaster.nl">Kadaster</a>'
     });
     map.addLayer(tileLayer);
 

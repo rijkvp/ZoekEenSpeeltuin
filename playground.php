@@ -4,6 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
+    <meta name="description" content="Zoek speeltuinen in de buurt op een kaart, laat beordelingen achter en voeg nieuwe speeltuinen toe." />
     <title>Zoek een Speeltuin - Speeltuin Informatie</title>
     <!-- Leaflet -->
     <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
@@ -19,7 +20,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="manifest" href="site.webmanifest">
     <!-- AdSense -->
-    <script data-ad-client="ca-pub-0210402010508195" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 
 <body>
@@ -30,6 +31,10 @@
         </nav>
     </header>
     <div id="content">
+        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-0210402010508195" data-ad-slot="8161070908" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
         <a class="btn" href="index.php">Terug</a>
         <?php
         if (isset($_GET['error'])) {
@@ -86,7 +91,7 @@
             echo '
                 <p class="date">' . date_format($date, "d-m-Y") . '</p>
                 <h1>' . $playground[1] . '</h1>
-                <a href="http://www.google.com/maps/place/' . $lat . ',' . $lng . '">Zie op Google Maps</a>';
+                <a href="http://www.google.com/maps/place/' . $lat . ',' . $lng . '" target="_blank">Zie op Google Maps</a>';
             if (!empty($picture_path) && isset($picture_path)) {
                 echo '<hr><img class="playgroundImage" src=' . $picture_path . '>';
             }
@@ -142,13 +147,13 @@
                 exit();
             }
             $partsList = array();
-            while ($playground = $result->fetch_row()) { 
+            while ($playground = $result->fetch_row()) {
                 $partsList[$parts[$playground[0] - 1]] = $playground[1];
             }
             if (count($partsList) > 0) {
                 echo '<table>
                 <tr><th>Onderdeel</th><th>Aantal</th></tr>';
-                foreach ($partsList as $name=>$count) {
+                foreach ($partsList as $name => $count) {
                     echo '  <tr>
                         <td>' . $name . '</td>
                         <td>' . $count . '</td> 
@@ -321,6 +326,8 @@
 
         ?>
     </div>
+    <?php include "footer.php";
+    showFooter(true); ?>
 </body>
 
 </html>

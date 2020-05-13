@@ -4,17 +4,17 @@ include "credentials.inc.php";
 
 $conn = mysqli_connect($servername, $dBUsername, $dBPassword);
 
-if($conn->connect_error) {
+if ($conn->connect_error) {
     http_response_code(500);
     exit();
 }
-$sql = "CREATE DATABASE IF NOT EXISTS ".$dBName;
+$sql = "CREATE DATABASE IF NOT EXISTS " . $dBName;
 if (!$conn->query($sql)) {
     http_response_code(500);
     exit();
 }
 
-$conn -> select_db($dBName);
+$conn->select_db($dBName);
 
 $sql = "CREATE TABLE IF NOT EXISTS parts_map (
     playground_id int(11),
@@ -80,13 +80,12 @@ if (!$conn->query($sql)) {
 }
 
 
-$defaultparts = array("Tafeltennistafel", "Goal", "Basket", "Bankje / Picknicktafel", "Schommel", "Daaimolen", "Zandbak", "Kabelbaan", "Waterpomp", "Parcours", "Wipwap","Wipkip", "Glijbaan", "Rekstok", "Klimrek", "Klimtoestel", "Trampoline", "Springkussen");
+$defaultparts = array("Tafeltennistafel", "Goal", "Basket", "Bankje / Picknicktafel", "Schommel", "Daaimolen", "Zandbak", "Kabelbaan", "Waterpomp", "Parcours", "Wipwap", "Wipkip", "Glijbaan", "Rekstok", "Speelhuisje", "Klimtoestel", "Trampoline", "Springkussen");
 sort($defaultparts);
 
-foreach($defaultparts as $part)
-{
-    $sql = "SELECT part_id FROM parts WHERE name='".$part."'";
-    $result = $conn->query($sql); 
+foreach ($defaultparts as $part) {
+    $sql = "SELECT part_id FROM parts WHERE name='" . $part . "'";
+    $result = $conn->query($sql);
 
     if (!$result) {
         http_response_code(500);
@@ -94,17 +93,13 @@ foreach($defaultparts as $part)
     }
     $potentialValue = $result->fetch_row()[0];
 
-    if (empty($potentialValue))
-    {
+    if (empty($potentialValue)) {
         $sql = "INSERT INTO  parts (name) VALUES (?)";
         $stmt = mysqli_stmt_init($conn);
-        if (!mysqli_stmt_prepare($stmt, $sql))
-        {
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
             http_response_code(500);
             exit();
-        }
-        else
-        {
+        } else {
             mysqli_stmt_bind_param($stmt, "s", $part);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
@@ -112,9 +107,9 @@ foreach($defaultparts as $part)
     }
 }
 
-$ip = getenv('HTTP_CLIENT_IP')?:
-    getenv('HTTP_X_FORWARDED_FOR')?:
-    getenv('HTTP_X_FORWARDED')?:
-    getenv('HTTP_FORWARDED_FOR')?:
-    getenv('HTTP_FORWARDED')?:
+$ip = getenv('HTTP_CLIENT_IP') ?:
+    getenv('HTTP_X_FORWARDED_FOR') ?:
+    getenv('HTTP_X_FORWARDED') ?:
+    getenv('HTTP_FORWARDED_FOR') ?:
+    getenv('HTTP_FORWARDED') ?:
     getenv('REMOTE_ADDR');

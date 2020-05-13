@@ -5,6 +5,7 @@ include 'includes/dbh.inc.php';
 <html>
 
 <head>
+    <meta name="description" content="Zoek speeltuinen in de buurt op een kaart, laat beordelingen achter en voeg nieuwe speeltuinen toe." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <title>Zoek een Speeltuin - Kaart</title>
@@ -238,7 +239,7 @@ include 'includes/dbh.inc.php';
                 [50.5, 3.25],
                 [54, 7.6]
             ],
-            attribution: 'Kaartgegevens &copy; <a href="kadaster.nl">Kadaster</a>'
+            attribution: 'Kaartgegevens &copy; <a href="https://kadaster.nl">Kadaster</a>'
         });
         map.addLayer(tileLayer);
         var layerGroup = L.layerGroup().addTo(map);

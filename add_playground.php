@@ -4,6 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
+    <meta name="description" content="Zoek speeltuinen in de buurt op een kaart, laat beordelingen achter en voeg nieuwe speeltuinen toe." />
     <title>Zoek een Speeltuin - Toevoegen</title>
     <!-- Own CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
@@ -116,7 +117,7 @@
             <h2>Algemeen</h2>
             <table>
                 <tr>
-                    <td><label for="name">Naam</label></td>
+                    <td><label for="name">Naam*</label></td>
                     <td>
                         <?php
                         if (!$editMode) {
@@ -151,37 +152,27 @@
                 ?>
             </table>
             <hr>
-            <h2>Locatie</h2>
+            <h2>Locatie*</h2>
             <p>Klik op de kaart om een locatie te selecteren:</p>
-            <div id="smallmap">
-            </div>
-            <table>
-                <tr>
-                    <td><label for="lat">Breedtegraad</label></td>
-                    <td>
-                        <?php
-                        if (!$editMode) {
-                            $lat = 0;
-                        }
-                        echo "<input type='number' step='0.0001' id='lat' name='lat' value=" . $lat . ">";
-                        ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="lng">Lengtegraad</label></td>
-                    <td>
-                        <?php
-                        if (!$editMode) {
-                            $lng = 0;
-                        }
-                        echo "<input type='number' step='0.0001' id='lng' name='lng' value=" . $lng . ">";
-                        ?>
-                    </td>
-                </tr>
-            </table>
+            <div id="smallmap"></div>
+            <?php
+            if (!$editMode) {
+                $lat = 52.379191;
+            }
+            echo "<input type='hidden' id='lat' name='lat' value=" . $lat . ">";
+            ?>
+            <?php
+            if (!$editMode) {
+                $lng = 4.900956;
+            }
+            echo "<input type='hidden' id='lng' name='lng' value=" . $lng . ">";
+            ?>
             <script>
-                var currentLat = 52.379191;
-                var currentLng = 4.900956;
+                <?php
+                echo 'var currentLat = '.$lat.';
+                    var currentLng = '.$lng.';
+                    var setPosition = '. json_encode(!$editMode).';';
+                ?>
 
                 var map = L.map('smallmap').setView([52.43, 5.42], 9);
                 var tileLayer = L.tileLayer('https://geodata.nationaalgeoregister.nl/tiles/service/wmts/brtachtergrondkaart/EPSG:3857/{z}/{x}/{y}.png', {
@@ -191,7 +182,7 @@
                         [50.5, 3.25],
                         [54, 7.6]
                     ],
-                    attribution: 'Kaartgegevens &copy; <a href="kadaster.nl">Kadaster</a>'
+                    attribution: 'Kaartgegevens &copy; <a href="https://kadaster.nl">Kadaster</a>'
                 });
                 map.addLayer(tileLayer);
                 map.on('click', function(e) {
@@ -200,7 +191,7 @@
                     updateLocation();
                 });
 
-                showLocation(map);
+                showLocation(map, setPosition);
 
                 var customIcon = L.icon({
                     iconUrl: 'img/marker-icon.png',
@@ -215,34 +206,27 @@
                     icon: customIcon
                 });
 
-
-                navigator.geolocation.getCurrentPosition(setDefaultPosition, null);
+                if (setPosition)
+                {
+                    navigator.geolocation.getCurrentPosition(setDefaultPosition, null);
+                } else {
+                    map.flyTo([currentLat, currentLng], 14);
+                }
+                
+                updateLocation();
 
                 function setDefaultPosition(position) {
                     currentLat = position.coords.latitude;
                     currentLng = position.coords.longitude;
-                    updateLocation();
                 }
-
-                var latInput = document.getElementById('lat');
-                latInput.addEventListener('change', function(e) {
-                    currentLat = e.target.value;
-                    updateLocation();
-                });
-                var lngInput = document.getElementById('lng');
-                lngInput.addEventListener('change', function(e) {
-                    currentLng = e.target.value;
-                    updateLocation();
-                });
-
                 function updateLocation() {
                     marker.setLatLng([currentLat, currentLng]).addTo(map);
-                    latInput.value = parseFloat(currentLat).toFixed(4);
-                    lngInput.value = parseFloat(currentLng).toFixed(4);
+                    document.getElementById('lat').value = parseFloat(currentLat).toFixed(4);
+                    document.getElementById('lng').value = parseFloat(currentLng).toFixed(4);
                 }
             </script>
             <hr>
-            <h2>Onderdelen</h2>
+            <h2>Onderdelen*</h2>
             <table>
                 </script>
                 <?php
@@ -312,12 +296,12 @@
                 ?>
             </table>
             <hr>
-            <h2>Leeftijd & Uitdaging</h2>
+            <h2>Leeftijd & Uitdaging*</h2>
             Deze speeltuin is leuk en uitdagend voor kinderen: <br>
             Van
             <?php
             if (!$editMode) {
-                echo '<input type="number" name="ageFrom" min="0" max="18" value="3">';
+                echo '<input type="number" name="ageFrom" min="0" max="18" value="0">';
             } else {
                 echo '<input type="number" name="ageFrom" min="0" max="18" value="' . $ageFrom . '">';
             }
@@ -325,7 +309,7 @@
             t/m
             <?php
             if (!$editMode) {
-                echo '<input type="number" name="ageTo" min="0" max="18" value="5">';
+                echo '<input type="number" name="ageTo" min="0" max="18" value="18">';
             } else {
                 echo '<input type="number" name="ageTo" min="0" max="18" value="' . $ageTo . '">';
             }
@@ -344,7 +328,7 @@
                         echo '<input type="checkbox"  name="alwaysOpen" value="true">';
                 }
                 ?>
-                <label for="alwaysOpen">Deze speeltuin is altijd open</label>
+                <label for="alwaysOpen">Deze speeltuin is altijd open*</label>
             </div>
             <br>
             <div class="checkbox">
@@ -358,11 +342,11 @@
                         echo '<input type="checkbox" name="cateringAvailable" value="true">';
                 }
                 ?>
-                <label for="cateringAvailable">Er is horeca aanwezig</label>
+                <label for="cateringAvailable">Er is horeca aanwezig*</label>
             </div>
             <hr>
             <h2>Beoordeling</h2>
-            <label for="nickname">Gebruikersnaam:</label>
+            <label for="nickname">Gebruikersnaam*:</label>
             <?php
             if ($editMode) {
                 $sql = "SELECT nickname, comment, rating FROM reviews WHERE ip='" . $ip . "' AND playground_id=" . $editId;
@@ -391,13 +375,15 @@
             echo '<textarea name="comment" maxlength ="240">' . $comment . '</textarea>';
             ?>
             <br>
-            Eigen cijfer (1 tot 5 sterren):
+            Eigen cijfer* (1 tot 5 sterren):
             <?php
             echo '<input type="number" name="rating" min="1" max="5" value="' . $rating . '">';
             ?>
             <br><br>
             <i>TIP: Denk bij de beoordeling aan bijvoorbeeld de staat van onderhoud, omgeving, diversiteit...</i>
             <br><br>
+            <p>* = verplicht</p>
+            <br>
             <?php
             if (!$editMode) {
                 echo '<input class="btn" type="submit" value="Voeg toe">';
@@ -407,6 +393,8 @@
             ?>
         </form>
     </div>
+    <?php include "footer.php";
+    showFooter(false); ?>
 </body>
 
 </html>
