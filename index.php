@@ -5,10 +5,11 @@ include 'includes/dbh.inc.php';
 <html>
 
 <head>
-    <meta name="description" content="Zoek speeltuinen in de buurt op een kaart, laat beordelingen achter en voeg nieuwe speeltuinen toe." />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <title>Zoek een Speeltuin - Kaart</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Zoek een speeltuin in Nederland. Zoek op de kaart en filter op leeftijd, speeltoestel, waardering, ... Voeg je eigen speeltuin toe of beoordeel een bestaande." />
+    <meta name="keywords" content="speeltuin, speelplek, zoek, kaart, buiten, spelen, kinderen, kind, buurt, speeltuinen" />   
+    <title>Zoek een Speeltuin</title>
     <!-- Leaflet -->
     <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
     <script src="libs/leaflet/leaflet.js"></script>
@@ -136,7 +137,7 @@ include 'includes/dbh.inc.php';
                 var ratingSlider = document.getElementById('ratingSlider');
                 noUiSlider.create(ratingSlider, {
                     start: 1,
-                    step: 0.1,
+                    step: 0.5,
                     connect: 'lower',
                     range: {
                         'min': 1,

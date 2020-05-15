@@ -517,8 +517,8 @@ textarea {
 }
 
 .noUi-handle {
-    width: 16px !important;
-    right: -8px !important;
+    width: 18px !important;
+    right: -9px !important;
 }
 
 .noUi-handle:before,

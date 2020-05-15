@@ -2,9 +2,10 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
-    <meta name="description" content="Zoek speeltuinen in de buurt op een kaart, laat beordelingen achter en voeg nieuwe speeltuinen toe." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Zoek een speeltuin in Nederland. Zoek op de kaart en filter op leeftijd, speeltoestel, waardering, ... Voeg je eigen speeltuin toe of beoordeel een bestaande." />
+    <meta name="keywords" content="speeltuin, speelplek, zoek, kaart, buiten, spelen, kinderen, kind, buurt, speeltuinen" />  
     <title>Zoek een Speeltuin - Speeltuin Informatie</title>
     <!-- Leaflet -->
     <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
