@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Zoek een speeltuin in Nederland. Zoek op de kaart en filter op leeftijd, speeltoestel, waardering, ... Voeg je eigen speeltuin toe of beoordeel een bestaande." />
+    <meta name="description" content="Voeg je eigen speeltuin toe en laat een review achter. Selecteer de onderdelen dat de speeltuin heeft en voeg eventueel een foto toe." />
     <meta name="keywords" content="speeltuin, speelplek, zoek, kaart, buiten, spelen, kinderen, kind, buurt, speeltuinen" />  
     <title>Zoek een Speeltuin - Toevoegen</title>
     <!-- Own CSS Stylesheet -->

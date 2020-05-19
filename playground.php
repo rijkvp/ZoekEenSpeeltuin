@@ -1,3 +1,37 @@
+<?php
+if (isset($_GET['id'])) {
+    require 'includes/dbh.inc.php';
+
+    $playgroundId = $_GET['id'];
+
+    $sql = "SELECT * FROM playgrounds WHERE id=" . $playgroundId;
+    $result = $conn->query($sql);
+
+    if (!$result) {
+        http_response_code(500);
+        exit();
+    }
+    $playground = $result->fetch_row();
+    if (empty($playground) || !isset($playground)) {
+        echo "Deze speeltuin bestaat niet (meer)!";
+        return;
+    }
+    $playgroundIp = $playground[8];
+
+    $lat = $playground[2];
+    $lng = $playground[3];
+    $date = DateTime::createFromFormat('Y-m-d', $playground[9]);
+
+    $sql = "SELECT path FROM pictures WHERE playground_id=" . $playgroundId;
+    $result = $conn->query($sql);
+    if (!$result) {
+        http_response_code(500);
+        exit();
+    }
+    $picture_path = ($result->fetch_row())[0];
+}
+?>
+
 <!DOCTYPE html>
 <html>
 
@@ -5,8 +39,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Zoek een speeltuin in Nederland. Zoek op de kaart en filter op leeftijd, speeltoestel, waardering, ... Voeg je eigen speeltuin toe of beoordeel een bestaande." />
-    <meta name="keywords" content="speeltuin, speelplek, zoek, kaart, buiten, spelen, kinderen, kind, buurt, speeltuinen" />  
-    <title>Zoek een Speeltuin - Speeltuin Informatie</title>
+    <meta name="keywords" content="speeltuin, speelplek, zoek, kaart, buiten, spelen, kinderen, kind, buurt, speeltuinen" />
+    <title>Zoek een Speeltuin - <?php echo $playground[1] ?></title>
     <!-- Leaflet -->
     <link rel="stylesheet" type="text/css" href="libs/leaflet/leaflet.css" />
     <script src="libs/leaflet/leaflet.js"></script>
@@ -53,75 +87,46 @@
                     break;
             }
             echo '<div class="errordiv">
-                    <h2>FOUT</h2>
-                    ' . $msg . '
-                    </div>';
+                <h2>FOUT</h2>
+                ' . $msg . '
+                </div>';
         }
         ?>
         <?php
         if (isset($_GET['id'])) {
-            require 'includes/dbh.inc.php';
-
-            $playgroundId = $_GET['id'];
-
-            $sql = "SELECT * FROM playgrounds WHERE id=" . $playgroundId;
-            $result = $conn->query($sql);
-
-            if (!$result) {
-                http_response_code(500);
-                exit();
-            }
-            $playground = $result->fetch_row();
-            if (empty($playground) || !isset($playground)) {
-                echo "Deze speeltuin bestaat niet (meer)!";
-                return;
-            }
-            $playgroundIp = $playground[8];
-
-            $lat = $playground[2];
-            $lng = $playground[3];
-            $date = DateTime::createFromFormat('Y-m-d', $playground[9]);
-
-            $sql = "SELECT path FROM pictures WHERE playground_id=" . $playgroundId;
-            $result = $conn->query($sql);
-            if (!$result) {
-                http_response_code(500);
-                exit();
-            }
-            $picture_path = ($result->fetch_row())[0];
             echo '
-                <p class="date">' . date_format($date, "d-m-Y") . '</p>
-                <h1>' . $playground[1] . '</h1>
-                <a href="http://www.google.com/maps/place/' . $lat . ',' . $lng . '" target="_blank">Zie op Google Maps</a>';
+            <p class="date">' . date_format($date, "d-m-Y") . '</p>
+            <h1>' . $playground[1] . '</h1>
+            <a href="http://www.google.com/maps/place/' . $lat . ',' . $lng . '" target="_blank">Zie op Google Maps</a>';
             if (!empty($picture_path) && isset($picture_path)) {
                 echo '<hr><img class="playgroundImage" src=' . $picture_path . '>';
             }
             if ($ip == $playgroundIp) {
                 echo '
-                    <hr>
-                    <h2>Toegevoegd door jou</h2>
-                    <p>Laatst bewerkt op: ' . date_format($date, "d-m-Y") . '</p>
-                    <a href="add_playground.php?action=edit&id=' . $playgroundId . '" class="btn smallbtn">Speeltuin bewerken</a>
-                ';
+                <hr>
+                <h2>Toegevoegd door jou</h2>
+                <p>Laatst bewerkt op: ' . date_format($date, "d-m-Y") . '</p>
+                <a href="add_playground.php?action=edit&id=' . $playgroundId . '" class="btn smallbtn">Speeltuin bewerken</a>
+            ';
             }
             echo '
-                <hr>
-                <h2>Kaart</h2>
-                <div id="smallmap"></div>
-                <hr>
-                <h2>Algemeen</h2>
-                <table>
-                <tr><td>Locatie</td><td>' . $lat . ', ' . $lng . '</td></tr>
-                <tr><td>Leeftijd/Uitdaging</td><td>' . $playground[4] . ' t/m ' . $playground[5] . ' jaar</td></tr>
-                <tr>
-                    <td>Altijd open</td>';
+            <hr>
+            <h2>Kaart</h2>
+            <div id="smallmap"></div>
+            <hr>
+            <h2>Algemeen</h2>
+            <table>
+            <tr><td>Locatie</td><td>' . $lat . ', ' . $lng . '</td></tr>
+            <tr><td>Leeftijd/Uitdaging</td><td>' . $playground[4] . ' t/m ' . $playground[5] . ' jaar</td></tr>
+            <tr>
+                <td>Altijd open</td>';
             if ($playground[6] == 1)
                 echo ("<td>Ja</td>");
             else
                 echo ("<td><strong>Nee</strong></td>");
             echo '</tr>
-                      <tr>
-                        <td>Horeca aanwezig</td>';
+                    <tr>
+                    <td>Horeca aanwezig</td>';
             if ($playground[7] == 1)
                 echo ("<td><strong>Ja</strong></td>");
             else
@@ -153,19 +158,19 @@
             }
             if (count($partsList) > 0) {
                 echo '<table>
-                <tr><th>Onderdeel</th><th>Aantal</th></tr>';
+            <tr><th>Onderdeel</th><th>Aantal</th></tr>';
                 foreach ($partsList as $name => $count) {
                     echo '  <tr>
-                        <td>' . $name . '</td>
-                        <td>' . $count . '</td> 
-                    </tr>';
+                    <td>' . $name . '</td>
+                    <td>' . $count . '</td> 
+                </tr>';
                 }
             } else {
                 echo 'De uploader heeft geen onderdelen toegevoegd aan deze speeltuin!';
             }
 
             echo '  </table><hr>
-                    <h2>Reviews</h2>';
+                <h2>Reviews</h2>';
             $sql = "SELECT AVG(rating) FROM reviews WHERE playground_id=" . $playgroundId;
             $result = $conn->query($sql);
             if (!$result) {
@@ -182,11 +187,11 @@
             }
             $ratingCount = ($result->fetch_row())[0];
             echo '
-                <div id="averageRating">
-                    <span class="ratinglabel">' . $avgRating . '</span>
-                    <span class="ratingstars">' . $avgRating . '</span>
-                    <span>(' . $ratingCount . ' reviews)</span>
-                </div>';
+            <div id="averageRating">
+                <span class="ratinglabel">' . $avgRating . '</span>
+                <span class="ratingstars">' . $avgRating . '</span>
+                <span>(' . $ratingCount . ' reviews)</span>
+            </div>';
 
             $sql = "SELECT nickname, comment, ip, rating FROM reviews WHERE playground_id=" . $playgroundId;
             $result = $conn->query($sql);
@@ -230,11 +235,11 @@
                         $label = "";
                     }
                     echo '<div class="review">
-                        <b class="reviewNickName">' . $label . $review[0] . '</b>
-                        <p class="reviewCount">' . $userReviewCount . ' reviews</p>
-                        <p class="ratingstars ratingsmall">' . $review[3] . '</p>
-                        <p>' . $review[1] . '</p>
-                    </div>';
+                    <b class="reviewNickName">' . $label . $review[0] . '</b>
+                    <p class="reviewCount">' . $userReviewCount . ' reviews</p>
+                    <p class="ratingstars ratingsmall">' . $review[3] . '</p>
+                    <p>' . $review[1] . '</p>
+                </div>';
                 }
                 echo "<script> makeAllStarLayouts(); setupMap(" . $lat . ", " . $lng . ");</script>";
             } else {
@@ -266,65 +271,64 @@
             }
             if ($ip != $playgroundIp && !$alreadyReviewed) {
                 echo '<hr>
-                <h2>Geef een review</h2>
+            <h2>Geef een review</h2>
+            <form action="includes/add_review.inc.php?id=' . $_GET['id'] . '" method="post">
+                <label for="nickname">Gebruikersnaam:</label>
+                <input type="text" name="nickname" minlength="4" maxlength="20">
+                <br>
+                <label for="comment">Tekst:</label>
+                <br>
+                <textarea name="comment" minlength="18" maxlength ="240"></textarea>
+                <br>
+                Eigen cijfer (1 tot 5 sterren): <input type="number" name="rating" min="1" max="5" value="4">
+                <br>
+                TIP: Denk bijvoorbeeld aan: staat van onderhoud, omgeving, diversiteit
+                <br>
+                <input class="btn smallbtn" type="submit" value="Versturen">
+            </form>
+            ';
+            } else if ($alreadyReviewed) {
+                echo '<hr>
+            <div id="review">
+                <h2>Review</h2>
+                <p>Je hebt al gereviewd.</p>
+                <button onclick="showEditReview()"class="btn smallbtn">Review bewerken</button>
+            </div>
+            <div id="editreview">
+                <h2>Review bewerken</h2>
                 <form action="includes/add_review.inc.php?id=' . $_GET['id'] . '" method="post">
+                    <input type="hidden" name="action" value="update">
                     <label for="nickname">Gebruikersnaam:</label>
-                    <input type="text" name="nickname" minlength="4" maxlength="20">
+                    <input type="text" name="nickname" minlength="4" maxlength="20" value="' . $nickname . '">
                     <br>
                     <label for="comment">Tekst:</label>
                     <br>
-                    <textarea name="comment" minlength="18" maxlength ="240"></textarea>
+                    <textarea name="comment" minlength="18" maxlength ="240">' . $comment . '</textarea>
                     <br>
-                    Eigen cijfer (1 tot 5 sterren): <input type="number" name="rating" min="1" max="5" value="4">
+                    Eigen cijfer (1 tot 5 sterren): <input type="number" name="rating" min="1" max="5" value="' . $rating . '">
                     <br>
                     TIP: Denk bijvoorbeeld aan: staat van onderhoud, omgeving, diversiteit
                     <br>
-                    <input class="btn smallbtn" type="submit" value="Versturen">
+                    <input class="btn smallbtn" type="submit" value="Opslaan">
                 </form>
-                ';
-            } else if ($alreadyReviewed) {
-                echo '<hr>
-                <div id="review">
-                    <h2>Review</h2>
-                    <p>Je hebt al gereviewd.</p>
-                    <button onclick="showEditReview()"class="btn smallbtn">Review bewerken</button>
-                </div>
-                <div id="editreview">
-                    <h2>Review bewerken</h2>
-                    <form action="includes/add_review.inc.php?id=' . $_GET['id'] . '" method="post">
-                        <input type="hidden" name="action" value="update">
-                        <label for="nickname">Gebruikersnaam:</label>
-                        <input type="text" name="nickname" minlength="4" maxlength="20" value="' . $nickname . '">
-                        <br>
-                        <label for="comment">Tekst:</label>
-                        <br>
-                        <textarea name="comment" minlength="18" maxlength ="240">' . $comment . '</textarea>
-                        <br>
-                        Eigen cijfer (1 tot 5 sterren): <input type="number" name="rating" min="1" max="5" value="' . $rating . '">
-                        <br>
-                        TIP: Denk bijvoorbeeld aan: staat van onderhoud, omgeving, diversiteit
-                        <br>
-                        <input class="btn smallbtn" type="submit" value="Opslaan">
-                    </form>
-                </div>
-                <script>
-                    var review = document.getElementById("review");
-                    var editReview = document.getElementById("editreview");
-                    editReview.style.display = "none";
-                    function showEditReview()
-                    {
-                        review.style.display = "none";
-                        editReview.style.display = "block";
-                    }
-                </script>';
+            </div>
+            <script>
+                var review = document.getElementById("review");
+                var editReview = document.getElementById("editreview");
+                editReview.style.display = "none";
+                function showEditReview()
+                {
+                    review.style.display = "none";
+                    editReview.style.display = "block";
+                }
+            </script>';
             } else {
                 echo "Je kan geen review meer toevoegen omdat je deze speeltuin zelf hebt geregistreed!";
             }
         } else {
             echo "<h1>ERROR</h1>
-            <p>Je hebt geen speeltuin geselecteerd</p>";
+        <p>Je hebt geen speeltuin geselecteerd</p>";
         }
-
         ?>
     </div>
     <?php include "footer.php";
